@@ -1,4 +1,4 @@
-/* Adopted refinements. Base layout and reveal/scroll controllers stay separate. */
+/* 採用したデザインの調整。基本の配置と表示・スクロールの制御は別ファイルで管理する。 */
 .home-refined { --refine-blue: #006e96; --refine-line: rgba(0,110,150,.15); }
 .home-refined .about { position: relative; }
 .refine-about-mark { position: absolute; left: 6.25vw; top: 47%; width: clamp(140px,17vw,320px); height: auto; transform: translateY(-50%); opacity: .43; pointer-events: none; }
@@ -7,7 +7,7 @@
 .home-refined .about-copy h1 > .heading-line:nth-child(2) { color: var(--blue); }
 .home-refined .about[data-about-reveal] [data-about-title-line]:last-child { color: var(--blue); }
 .home-refined .about .text-link { padding-bottom: 6px; border-bottom: 1px solid var(--refine-line); }
-/* Link feedback only. Destinations remain unwired until their URLs are supplied. */
+/* リンクの反応だけを追加する。遷移先はURLが指定されるまで未設定とする。 */
 .home-refined .about .text-link { position: relative; }
 .home-refined .about .text-link::after { content: ""; position: absolute; inset: auto 0 -1px; height: 1px; background: var(--blue); transform: scaleX(0); transform-origin: left; }
 .learn-arrow { display: inline-block; }
@@ -30,7 +30,7 @@
   .home-refined .connect-button > span:first-child { transition: color 220ms ease-out; }
 }
 
-/* A drawing explains the relationship between the three activities. */
+/* 3つの活動のつながりを図で表す。 */
 .home-refined .activity-layout { position: relative; isolation: isolate; }
 .home-refined .activity-heading, .home-refined .activity-list { z-index: 1; }
 .refine-activity-surface { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
@@ -82,12 +82,12 @@
   .refine-flow-diagram :is(.flow-trace,.flow-arrival-forward,.flow-arrival-backward) { opacity: 0 !important; }
 }
 
-/* News remains an honest empty state; no placeholder articles or fake dates. */
+/* NEWSは掲載なしの状態をそのまま案内し、仮の記事や日付は追加しない。 */
 .home-refined .news-top-rule, .home-refined .news-rule { height: 1px; opacity: .52; }
 .home-refined .news-empty-title::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 12px; border: 1px solid var(--blue); border-radius: 50%; vertical-align: .15em; }
 .home-refined .news-empty > .body-copy { color: #657174; }
 
-/* White CONNECT keeps the adopted layout, with the same connection motif. */
+/* 白背景CONNECTの採用済み配置を維持し、共通の輪の図案を添える。 */
 .home-refined .connect { position: relative; }
 .refine-connect-mark { position: absolute; right: calc(var(--connect-gutter) + 50px); top: clamp(150px,11vw,210px); width: clamp(130px,11vw,190px); height: auto; opacity: .38; pointer-events: none; }
 

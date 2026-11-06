@@ -1,4 +1,4 @@
-/* Adopted CONNECT only. The gray hero and all other sections keep their styles. */
+/* 採用したCONNECT専用のスタイル。グレーのトップと他セクションのスタイルは維持する。 */
 .connect.connect-white {
   --paper: #fff;
   --heading: #303537;

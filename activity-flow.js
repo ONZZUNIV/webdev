@@ -1,4 +1,4 @@
-// Decorative flow feedback. Observe the reel; never change scroll or its timing.
+// 装飾図の表示制御。スロットを監視し、スクロール位置や時間配分は変更しない。
 (() => {
   const stage = document.querySelector('.home-refined .activity-stage');
   const visual = stage?.querySelector('.refine-activity-visual');
@@ -11,7 +11,7 @@
   let fitFrame = 0;
   function fit() {
     fitFrame = 0;
-    // Only the fixed-height reel needs fitting. Ordinary flow can grow naturally.
+    // 高さが固定されたスロットだけ図を収める。通常表示では内容に応じて高さを伸ばす。
     if (!stage.hasAttribute('data-activity-slot')) {
       visual.removeAttribute('data-flow-fit');
       visual.removeAttribute('data-flow-hidden');
@@ -24,7 +24,7 @@
     const base = copy.getBoundingClientRect().bottom - heading.getBoundingClientRect().top;
     const available = room - base - 16 - labels.getBoundingClientRect().height - 4;
     const width = Math.min(440, copy.parentElement.clientWidth, Math.floor(available * 480 / 140));
-    // 240px keeps the three symbols legible; this is a visual tuning value.
+    // 3つの図が読める下限を240pxとする。この値は見た目に基づく調整値。
     visual.toggleAttribute('data-flow-hidden', width < 240);
     visual.toggleAttribute('data-flow-fit', width < 440);
     const value = Math.max(0, width) + 'px';
@@ -70,7 +70,7 @@
     const from = previous;
     previous = next;
     stop();
-    // Initial entry, restoration, and ordinary stacked layouts need no travel pulse.
+    // 初回表示・位置復元・通常の縦並びでは、矢印を流さない。
     if (from === null || next === null || motion.matches || document.hidden || visual.getBoundingClientRect().height === 0) return;
     const direction = next > from ? 1 : -1;
     visual.dataset.flowDirection = direction > 0 ? 'forward' : 'backward';

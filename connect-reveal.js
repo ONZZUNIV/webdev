@@ -1,4 +1,4 @@
-// Independent one-time entrances; page scrolling and all other sections stay native.
+// 各要素を初回だけ表示する。ページのスクロールや他セクションの動作には干渉しない。
 (() => {
   const section = document.querySelector('.connect');
   const banner = section?.querySelector('.connect-banner > span');
@@ -156,7 +156,7 @@
       clearTimeout(fontDeadline);
       try { measureLines(); ready=true; settleViewport(); } catch { finishAll(); }
     };
-    // A slow font promise may use current glyphs, but must not consume unseen entries.
+    // フォントの読込が遅い場合は現在の文字で処理するが、未表示要素の登場演出は消費しない。
     fontDeadline = setTimeout(prepareHeader,2500);
     Promise.resolve(document.fonts?.ready).then(prepareHeader,finishAll);
     schedule();

@@ -5,7 +5,7 @@
 @font-face{font-family:"Alan Sans";font-style:normal;font-weight:700;src:url("assets/fonts/alan-sans-700.ttf") format("truetype");font-display:swap}
 @font-face{font-family:"Albert Sans";font-style:normal;font-weight:700;src:url("assets/fonts/albert-sans-700.ttf") format("truetype");font-display:swap}
 @font-face{font-family:"Alatsi";font-style:normal;font-weight:400;src:url("assets/fonts/alatsi-400.ttf") format("truetype");font-display:swap}
-/* Inferred Japanese fallback retained from the desktop implementation. */
+/* デスクトップ版で推定した日本語の代替フォントを継続する。 */
 @font-face{font-family:"Noto Sans JP";font-style:normal;font-weight:100 900;src:url("assets/fonts/noto-sans-jp.ttf") format("truetype");font-display:swap}
 
 :root {
@@ -15,7 +15,7 @@
   --pale-blue: #e6faff;
   --blue: #006e96;
   --outline: #d7d7d7;
-  /* 1440px is the interpolation reference, not a container maximum. */
+  /* 1440pxは比率の基準であり、コンテナの最大幅ではない。 */
   --body-size: clamp(15px, 1.111111vw, 20px);
   --heading-size: clamp(28px, 2.5vw, 52px);
   --label-size: clamp(22px, 1.944444vw, 38px);
@@ -36,11 +36,11 @@ a { color: inherit; text-decoration: none; }
 .text-link { display: block; width: 6.625em; margin-left: auto; font-weight: 700; line-height: 1.3125; color: var(--heading); white-space: nowrap; }
 .heading-line { display: block; }
 
-/* The existing placeholder scales with its original visible aspect ratio. */
+/* 既存の仮画像は、元の表示比率に合わせて拡縮する。 */
 .hero { position: relative; aspect-ratio: 1440 / 793; overflow: hidden; }
 .hero img { position: absolute; left: 1px; top: -.486111vw; width: 100%; height: auto; }
 
-/* Rotated section labels and their rules are decorative, outside text flow. */
+/* 回転したセクションラベルと罫線は、通常フロー外の装飾として配置する。 */
 .section-label { position: relative; font-size: var(--label-size); font-weight: 300; line-height: 1.285714; color: var(--heading); }
 .section-label > span { position: absolute; left: calc(var(--label-width) - 1px); top: 0; transform: rotate(90deg); transform-origin: top left; white-space: nowrap; }
 .section-label > img { position: absolute; transform: rotate(90deg); transform-origin: top left; }
@@ -55,7 +55,7 @@ a { color: inherit; text-decoration: none; }
 .about-copy { max-width: 36em; }
 .about-copy h1 { max-width: min(100%, 29.791667vw); font-size: var(--heading-size); font-weight: 700; line-height: 1.305556; letter-spacing: .1em; }
 .about-copy > p { margin-top: var(--space-32); }
-/* Auto-height body is 1px taller at 1440px; the link gap compensates. */
+/* 1440pxでは本文の自動高さが1px増えるため、リンク前の余白で補正する。 */
 .about-copy .text-link { margin-top: 1.5em; }
 
 .activity {
@@ -167,7 +167,7 @@ a { color: inherit; text-decoration: none; }
 .connect-divider img { position: absolute; left: 1px; top: 0; width: 100cqh; height: 1px; transform: rotate(90deg); transform-origin: top left; }
 .footer-placeholder { margin: 8.055556vw -1px 0; height: clamp(64px, 5.486111vw, 112px); background: #8e8e8e; border: 1px solid rgba(230,250,255,.44); }
 
-/* About needs a wider reading column before the desktop proportions get tight. */
+/* デスクトップの比率が窮屈になる手前で、ABOUTの読み幅を広げる。 */
 @media (max-width: 1099.98px) {
   .about { grid-template-columns: var(--label-width) minmax(0, 1fr); column-gap: 5vw; padding: 10vw 14vw 11vw; }
   .about-copy { max-width: 38em; }
@@ -175,7 +175,7 @@ a { color: inherit; text-decoration: none; }
   .about .heading-line { display: inline; }
 }
 
-/* At this width, a stacked introduction leaves enough room for the activity text. */
+/* この幅では導入を縦に並べ、活動の文章に十分な幅を確保する。 */
 @media (max-width: 1199.98px) {
   .activity { padding-block: 8vw 9vw; }
   .activity-layout { grid-template-columns: minmax(0, 1fr); row-gap: 6vw; }
@@ -189,14 +189,14 @@ a { color: inherit; text-decoration: none; }
   .scroll-mark { margin: 2em 0 0; }
 }
 
-/* News metadata stays together; the unchanged article text gets a full row. */
+/* NEWSの補足情報をまとめ、記事本文には1行分の幅を確保する。 */
 @media (max-width: 999.98px) {
   .news { padding-block: 10vw; column-gap: 4vw; }
   .news-item { grid-template-columns: 5.4375em minmax(0, 1fr); row-gap: 1em; padding-block: 1.5em; }
   .news-item > p { grid-column: 1 / -1; margin-left: 0; padding-top: 0; line-height: 1.6; }
 }
 
-/* Connect switches independently; both audiences retain their text and CTA. */
+/* CONNECTは独立した幅で段組みを変更し、双方の案内文とボタンを維持する。 */
 @media (max-width: 999.98px) {
   .connect-columns { grid-template-columns: minmax(0, 1fr); row-gap: 2.5em; margin-inline: 16vw; }
   .connect-card { justify-items: center; }
@@ -207,7 +207,7 @@ a { color: inherit; text-decoration: none; }
   .connect-divider img { position: static; width: 100%; height: 1px; transform: none; }
 }
 
-/* Mobile values are implementation choices; Figma supplies only the desktop frame. */
+/* スマホの値は実装上の判断。Figmaにはデスクトップのフレームだけがある。 */
 @media (max-width: 799.98px) {
   :root {
     --mobile-gutter: clamp(20px, 5vw, 40px);
@@ -256,13 +256,13 @@ a { color: inherit; text-decoration: none; }
   .about .heading-line { display: block; }
 }
 
-/* ABOUT only. No enhancement attribute means the original, fully visible page. */
+/* ABOUT専用。拡張用の属性がなければ、すべての内容を通常表示する。 */
 .about[data-about-reveal] .about-label > * {
   --about-label-clip-start: inset(0 0 100% 0);
   clip-path: var(--about-label-clip-start);
 }
 
-/* A 90-degree label rotation maps local left-to-right to screen top-to-bottom. */
+/* ラベルを90度回転すると、要素内の左から右が画面上の上から下に対応する。 */
 @media (min-width: 800px) {
   .about[data-about-reveal] .about-label > * { --about-label-clip-start: inset(0 100% 0 0); }
 }
@@ -302,7 +302,7 @@ a { color: inherit; text-decoration: none; }
   to { clip-path: inset(0); }
 }
 
-/* NEWS: the existing text-then-rule label reveal, followed by a simple copy fade. */
+/* NEWSはラベル文字、罫線の順に表示し、その後で案内文をフェード表示する。 */
 .news-label[data-news-reveal] > * {
   --about-label-clip-start: inset(0 0 100% 0);
   clip-path: var(--about-label-clip-start);
@@ -336,7 +336,7 @@ a { color: inherit; text-decoration: none; }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* CONNECT keeps its band and divider still; only text and calls to action enter. */
+/* CONNECTの背景帯と区切り線は静止させ、文字とボタンだけを表示する。 */
 .connect[data-connect-reveal] .connect-banner > span { display: inline-block; clip-path: inset(100% 0 0); }
 .connect[data-connect-reveal] > h2 { position: relative; isolation: isolate; }
 .connect[data-connect-reveal]:not([data-connect-title-ready]) > h2 { opacity: 0; }
@@ -376,7 +376,7 @@ a { color: inherit; text-decoration: none; }
   .about[data-about-reveal] .about-copy > p { transform: none; }
 }
 
-/* Confine the cover effect to ABOUT -> ACTIVITY, without changing flow space. */
+/* 重なりの演出はABOUTからACTIVITYの境界に限定し、通常フローの余白を維持する。 */
 .about-activity-boundary { position: relative; isolation: isolate; }
 @media (prefers-reduced-motion: no-preference) {
   .about-activity-boundary[data-overlap-ready] > .about {
@@ -389,7 +389,7 @@ a { color: inherit; text-decoration: none; }
   .about-activity-boundary[data-overlap-ready] > .activity { z-index: 1; }
 }
 
-/* ACTIVITY's left introduction reuses ABOUT's motion independently of the list. */
+/* ACTIVITY左側の導入は、一覧とは独立してABOUTと同じ演出を使う。 */
 .activity-heading[data-activity-reveal] .activity-label > * {
   --about-label-clip-start: inset(0 0 100% 0);
   clip-path: var(--about-label-clip-start);
@@ -420,7 +420,7 @@ a { color: inherit; text-decoration: none; }
   .activity-heading[data-activity-reveal] .activity-intro > p { opacity: 1; transform: none; animation: none; }
 }
 
-/* Only the upper edge casts a faint shadow; it never intercepts input. */
+/* 上端だけに薄い影を付ける。操作は遮らない。 */
 .about-activity-boundary > .activity::before {
   content: "";
   position: absolute;
@@ -431,7 +431,7 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 
-/* Add breathing room between Learn More and the incoming blue curtain. */
+/* Learn Moreと下から現れる青幕の間に余白を追加する。 */
 .about-activity-boundary { --about-extra-bottom-space: 100px; }
 .about-activity-boundary > .about { padding-bottom: calc(12.013889vw + var(--about-extra-bottom-space)); }
 @media (max-width: 1099.98px) {
@@ -441,7 +441,7 @@ a { color: inherit; text-decoration: none; }
   .about-activity-boundary > .about { padding-bottom: calc(var(--mobile-section-space) + var(--about-extra-bottom-space)); }
 }
 
-/* Keep the desktop introduction within its original grid and readable on short screens. */
+/* デスクトップの導入を元のグリッド内に収め、高さの低い画面でも読めるようにする。 */
 @media (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
   .activity-heading, .activity-list { align-self: start; }
   .activity-stage[data-activity-panels-sticky] {
@@ -458,14 +458,14 @@ a { color: inherit; text-decoration: none; }
     top: min(clamp(24px, 7svh, 96px), calc(100svh - var(--activity-heading-height) - 24px));
   }
 }
-/* ACTIVITY articles, including their existing divider, reveal as one unit. */
+/* 活動項目は既存の区切り線を含めて一まとまりで表示する。 */
 .activity-item[data-activity-item-reveal] { opacity: 0; transform: translateY(12px); }
 .activity-item[data-activity-item-reveal="playing"] { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .activity-item[data-activity-item-reveal] { opacity: 1; transform: none; animation: none; }
 }
 
-/* A scroll-driven reel: active glyphs align with the left-hand tagline. */
+/* スクロール連動のスロット。選択中の文字を左側のキャッチコピーに揃える。 */
 @media (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
   .activity[data-activity-viewport] { padding-block: 0; border: 0; background: transparent; }
   .activity-stage[data-activity-slot] {
@@ -481,7 +481,7 @@ a { color: inherit; text-decoration: none; }
     border: 1px solid var(--outline);
     background: var(--pale-blue);
   }
-  /* The shared panel releases both columns together at the end of Try. */
+  /* Tryの終了時に、共通パネルの左右両方の固定を解除する。 */
   [data-activity-slot] .activity-heading[data-activity-sticky] { position: static; }
   [data-activity-slot] .activity-list {
     position: relative;
@@ -510,7 +510,7 @@ a { color: inherit; text-decoration: none; }
   [data-activity-slot] .activity-number { top: var(--slot-number-top, 1px); }
 }
 
-/* Article parts enter once: number -> ink-sized title covers -> copy and rule. */
+/* 項目内は番号、文字の描画範囲に合わせたカバー見出し、本文と罫線の順に初回表示する。 */
 .activity-item[data-activity-item-parts] :is(h3,h4) { position: relative; isolation: isolate; }
 .activity-item[data-activity-item-parts]:not([data-activity-item-titles-ready]) :is(h3,h4) { opacity: 0; }
 .activity-item[data-activity-item-parts] :is(.activity-number,.body-copy,.activity-rule) { opacity: 0; }

@@ -1,4 +1,4 @@
-// Progressive enhancement: all content is visible until this setup succeeds.
+// 段階的な機能追加。準備に成功するまでは、すべての内容を表示する。
 (() => {
   const about = document.querySelector('.about');
   const title = about?.querySelector('h1');
@@ -66,7 +66,7 @@
         const ascent = metrics.fontBoundingBoxAscent ?? parseFloat(style.fontSize);
         const descent = metrics.fontBoundingBoxDescent ?? 0;
         const baseline = box.top + (box.height - ascent - descent) / 2 + ascent;
-        // Use ink bounds, not the h1 width, trailing tracking, or line-height gap.
+        // 見出し要素の幅や末尾の字間、行高の空白ではなく、文字の描画範囲を使う。
         const left = box.left - metrics.actualBoundingBoxLeft;
         const right = box.left + metrics.actualBoundingBoxRight;
         const top = baseline - metrics.actualBoundingBoxAscent;
@@ -89,7 +89,7 @@
       const line = document.createElement('span');
       line.dataset.aboutTitleLine = '';
       line.setAttribute('aria-hidden', 'true');
-      // Half a pixel per edge covers antialiasing without a large padded band.
+      // 各辺に0.5px加え、大きな帯にせず文字の縁の描画を覆う。
       Object.assign(line.style, {
         left: (row.left - headingBox.left - .5) + 'px',
         top: (row.top - headingBox.top - .5) + 'px',
@@ -110,13 +110,13 @@
 
   function refreshLines() {
     if (finished || !ready) return;
-    // A resize during playback completes the reveal instead of leaving stale masks.
+    // 再生中にサイズが変わったら表示を完了し、古いマスクを残さない。
     if (started) { finish(); return; }
     try { measureLines(); } catch { finish(); }
   }
 
   function revealIfPassed() {
-    // IO may not emit an entry when a jump skips the viewport completely.
+    // 一度の移動で画面を通過すると、Intersection Observerが通知しない場合がある。
     if (title.getBoundingClientRect().bottom <= 0) finish();
   }
   function revealIfHidden() { if (document.hidden) finish(); }
@@ -155,7 +155,7 @@
     revealIfHidden();
     if (finished) return;
 
-    // Wait for the original fonts before measuring; never wait indefinitely.
+    // 文字の計測前に指定フォントを待つが、無期限には待機しない。
     fontDeadline = window.setTimeout(finish, 2500);
     Promise.resolve(document.fonts?.ready).then(() => {
       if (finished) return;

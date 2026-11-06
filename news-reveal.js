@@ -1,4 +1,4 @@
-// Reveal the News label, then fade in the empty-state text without moving it.
+// Newsラベルの後に掲載なしの案内をフェード表示する。位置は動かさない。
 (() => {
   const label = document.querySelector('.news-label');
   const text = label?.querySelector('span'), rule = label?.querySelector('img');
@@ -14,7 +14,7 @@
   function settleViewport() {
     if (finished || !pageShown || !fontsReady || document.hidden) return;
     cancelAnimationFrame(viewportFrame);
-    // Native restoration and ACTIVITY's layout settle after pageshow/font load.
+    // ブラウザの位置復元とACTIVITYの配置は、pageshowとフォント読込後に安定する。
     viewportFrame = requestAnimationFrame(()=>{viewportFrame=requestAnimationFrame(()=>{
       viewportReady = true; schedule();
     });});
@@ -50,7 +50,7 @@
   function resize() { if (started) finish(); else schedule(); }
   function suspend() {
     viewportReady = false; cancelAnimationFrame(viewportFrame);
-    // Unseen content keeps its entrance; only an already-playing one completes.
+    // 未表示の内容は登場待ちを維持し、再生中のものだけを完了する。
     if (started) finish();
   }
   function shown() { pageShown = true; settleViewport(); }

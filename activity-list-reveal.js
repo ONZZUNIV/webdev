@@ -1,5 +1,5 @@
 (() => {
-// One-time entrances inside each article. The reel owns the article transform.
+// 各項目内の初回表示。項目全体の変形はスロット側で管理する。
 const articleReveal = (() => {
   const states = new Map(), deadlines = new Map(), callbacks = new Map();
   const all = [...document.querySelectorAll('.activity-item')];
@@ -78,9 +78,9 @@ const articleReveal = (() => {
   return {prepareAll:()=>all.forEach(prepare),play,finish,finishAll,state:item=>states.get(item)};
 })();
 
-// Page scroll selects a resting slot; only the reel eases to that position.
-// Small/short viewports retain the
-// ordinary readable list and the existing one-time entrances below.
+// ページのスクロールで停止位置を選び、スロットだけを滑らかに移動する。
+// 幅や高さが足りない画面では、
+// 通常の一覧と既存の初回表示を使用する。
 (() => {
   const heading = document.querySelector('.activity-heading');
   const list = document.querySelector('.activity-list');
@@ -97,7 +97,7 @@ const articleReveal = (() => {
     const style = getComputedStyle(element), character = element.textContent.trim()[0];
     const key = style.font + style.letterSpacing + character;
     if (inkCache.has(key)) return inkCache.get(key);
-    // Measure a natural-size glyph, unaffected by the reel's visual transforms.
+    // スロットの変形に影響されない、元の大きさの文字を計測する。
     const probe = document.createElement('span');
     Object.assign(probe.style, {position:'absolute',left:'0',top:'0',visibility:'hidden',
       display:'block',whiteSpace:'pre',font:style.font,letterSpacing:style.letterSpacing});
@@ -119,7 +119,7 @@ const articleReveal = (() => {
   let frame, revealDeadline, entered = false, revealing = false;
   let snap = null;
   function selectSlot(raw, target) {
-    // Forward gates .45/1.45; backward gates .35/1.35 avoid wheel jitter.
+    // 進行時の境界は.45/1.45、逆方向は.35/1.35とし、ホイール操作の揺れを防ぐ。
     while (target < 2 && raw >= target + .45) target++;
     while (target > 0 && raw <= target - .65) target--;
     return target;
@@ -147,8 +147,8 @@ const articleReveal = (() => {
   const historyKey = 'circleActivityReel';
   let savedEntry;
   try { savedEntry=history.state?.[historyKey]; } catch {}
-  // Old entries rebased the scroll track after the first entrance. Discard that
-  // timing data; v2 stores only the selected slot and the one-time entry gate.
+  // 旧形式は初回表示後にスクロールの基準を変更していたため、その時間情報を破棄する。
+  // バージョン2では選択中の項目と初回表示の開始状態だけを保存する。
   if(savedEntry?.version!==2||typeof savedEntry.entered!=='boolean')savedEntry=null;
   let restoredSlot = restoreNavigation && Number.isInteger(savedEntry?.slotIndex) && savedEntry.slotIndex>=0 && savedEntry.slotIndex<=2 ? savedEntry.slotIndex : null;
   let lastSaved='';
@@ -158,7 +158,7 @@ const articleReveal = (() => {
   function readyToRestore() {
     if(!restoreFontsReady||!restorePageShown)return;
     cancelAnimationFrame(restoreFrame);
-    // Native scroll restoration follows load/pageshow; wait for its layout frames.
+    // ブラウザの位置復元はload/pageshow後に行われるため、配置の確定を待つ。
     restoreFrame=requestAnimationFrame(()=>{restoreFrame=requestAnimationFrame(()=>{
       if(stage.hasAttribute('data-activity-slot')&&scrollY<startPosition()){
         entered=false;restoredSlot=null;
@@ -208,7 +208,7 @@ const articleReveal = (() => {
     const dwell = parseFloat(stage.style.getPropertyValue('--activity-slot-dwell'));
     if (!entered && (titleShown||!heading.hasAttribute('data-activity-reveal')) && scrollY >= start) {
       entered = true;
-      // A section already passed in one jump must not pull the reader back.
+      // 一度に通過したセクションへ閲覧位置を引き戻さない。
       if (pinned()) {
         revealing = true;
         stage.dataset.activitySlotStarting = '';
@@ -217,8 +217,8 @@ const articleReveal = (() => {
       }
     }
     if (revealing && !pinned()) stopReveal();
-    // Pause only the initial visual entrance. Page position always maps to the
-    // original fixed track; waiting must not create an offset or a shorter scale.
+    // 待機するのは初回の表示演出だけとする。ページ位置は元の固定区間に対応させ、
+    // 待機によって位置のずれや区間の短縮を生じさせない。
     set(stage,'--activity-slot-origin',start+'px');
     set(stage,'--activity-slot-fit','1');
     const travelled = !entered || revealing ? 0 : Math.max(0,scrollY-start);
@@ -253,7 +253,7 @@ const articleReveal = (() => {
       set(item, '--slot-opacity', String(visible * (1 - Math.min(1, magnitude) * .30)));
       item.style.zIndex = String(Math.round((3 - magnitude) * 10));
     });
-    // Finish a turn even when page scrolling stops; never move the page itself.
+    // スクロールが止まっても項目の切替は完了する。ページ自体は動かさない。
     if (progress !== snap.target) schedule();
   }
   function schedule() { if (!frame) frame = requestAnimationFrame(render); }
@@ -281,7 +281,7 @@ const articleReveal = (() => {
       heading.style.setProperty('--activity-heading-height', height);
     }
     heading.dataset.activitySticky = '';
-    // Child layout heights do not include the reel's visual scale/rotation.
+    // 子要素の高さには、スロット表示の拡大縮小や回転は含まれない。
     const cardHeight = Math.max(...items.map(item => Math.max(...[...item.querySelectorAll('.activity-name,.activity-copy')].map(el => parseFloat(getComputedStyle(el).height))) + 24));
     const pin = Math.min(96, Math.max(24, innerHeight * .07));
     const slot = 'IntersectionObserver' in window && innerWidth >= 1200 && innerHeight >= Math.max(600, cardHeight * 2.8 + pin * 2);
@@ -290,7 +290,7 @@ const articleReveal = (() => {
     section.toggleAttribute('data-activity-viewport',slot);
     if (slot) {
       articleReveal.prepareAll();
-      // Font loading may change actual glyph metrics without changing CSS font names.
+      // フォント名が同じでも、読込完了によって実際の文字寸法は変わる。
       inkCache.clear();
       set(stage, '--activity-panel-inset', pin + 'px');
       set(stage, '--activity-slot-height', (innerHeight - pin * 2 - 2) + 'px');
@@ -348,7 +348,7 @@ const articleReveal = (() => {
   }
 })();
 
-// Scroll gates, not timer delays, add the activity articles.
+// 活動項目は時間差ではなく、スクロール位置の境界に応じて表示する。
 (() => {
   const list = document.querySelector('.activity-list');
   const heading = document.querySelector('.activity-heading');
@@ -406,12 +406,12 @@ const articleReveal = (() => {
     if (maxScroll <= 1) { finish(); return; }
     const box = title.getBoundingClientRect();
     const desktop = matchMedia('(min-width: 1200px)').matches;
-    // A mostly-passed title cannot reach the intro's 50% entry threshold again
-    // while scrolling down; keep the ordinary article list readable in that gap.
+    // 見出しをほぼ通過すると、下方向の操作では導入の50%表示条件に再び達しないため、
+    // その間も通常の活動一覧を閲覧できるようにする。
     const titlePastHalf = box.top < 0 && box.bottom < box.height * .5;
     const leftReady = !heading.hasAttribute('data-activity-reveal') || titlePastHalf || box.bottom <= 0 || (!desktop && titleShown);
-    // A sticky title's viewport rect stops moving, so use its original grid
-    // position as the scroll reference. Never derive a gate from the pinned rect.
+    // 固定表示された見出しの画面上の位置は動かないため、元のグリッド位置を基準にする。
+    // 固定後の座標から表示開始の境界を求めない。
     const headingBox = heading.getBoundingClientRect();
     const layoutBox = heading.closest('.activity-stage').getBoundingClientRect();
     const layoutTop = layoutBox.top + scrollY;
@@ -434,8 +434,8 @@ const articleReveal = (() => {
         eligible.push(item);
       }
     });
-    // A jump may cross several gates in one frame: already-passed content is
-    // immediately readable; only the last crossed item needs an entrance.
+    // 一度の移動で複数の境界を越えた場合、通過済みの内容はすぐ読める状態にし、
+    // 最後に越えた項目だけに登場演出を適用する。
     eligible.forEach((item, index) => index < eligible.length - 1 ? show(item) : reveal(item));
     settle();
   }

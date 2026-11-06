@@ -1,4 +1,4 @@
-// CSS owns the scroll effect. JS supplies only ABOUT's responsive block height.
+// スクロール演出はCSSで行う。JavaScriptは画面幅に応じたABOUTの高さだけを渡す。
 (() => {
   const boundary = document.querySelector('.about-activity-boundary');
   const about = boundary?.querySelector('.about');

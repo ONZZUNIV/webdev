@@ -1,4 +1,4 @@
-// ACTIVITY's left introduction only; ABOUT and the scroll curtain are independent.
+// ACTIVITY左側の導入専用。ABOUTと青幕のスクロール演出は独立している。
 (() => {
   const section = document.querySelector('.activity');
   const heading = section?.querySelector('.activity-heading');
@@ -103,7 +103,7 @@
     frame=0;
     if (finished) return;
     const viewport=window.innerHeight, box=section.getBoundingClientRect(), text=title.getBoundingClientRect();
-    // Skipping past the introduction must reveal it even if IO missed the crossing.
+    // 導入を飛び越えた場合は、Intersection Observerの通知がなくても表示する。
     if (text.bottom<=0 || document.documentElement.scrollHeight<=viewport+1) { finish(); return; }
     if (started || !ready) return;
     const visible=Math.max(0,Math.min(viewport,text.bottom)-Math.max(0,text.top));
@@ -112,7 +112,7 @@
       const top=Math.max(0,rect.top),bottom=Math.min(viewport,rect.bottom);
       return bottom<=top || box.top<=top+(bottom-top)*.15;
     });
-    // 85% is an entry-edge threshold, not an intersection ratio of the tall section.
+    // 85%は画面端に対する開始位置であり、縦長セクション全体の表示割合ではない。
     if (box.top<=viewport*.15 && textCovered && visible>=text.height*.5) start();
   }
   function scheduleCheck() {
