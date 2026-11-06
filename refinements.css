@@ -20,13 +20,14 @@
   .home-refined .about .text-link:hover { color: var(--blue); }
   .home-refined .about .text-link:hover::after { transform: scaleX(1); }
   .home-refined .about .text-link:hover .learn-arrow { transform: translateX(3px); }
-  .home-refined .connect-button:hover { color: var(--blue); }
-  .home-refined .connect-button:hover .connect-arrow { background: var(--blue); color: #fff; transform: translate(2px,-2px); }
+  .home-refined .connect-button > span:first-child:hover { color: var(--blue); }
+  .home-refined .connect-button > .connect-arrow:hover { background: var(--blue); color: #fff; transform: translate(2px,-2px); }
 }
 @media (prefers-reduced-motion: no-preference) {
   .home-refined .about .text-link, .home-refined .connect-button { transition: color 220ms ease-out; }
   .home-refined .about .text-link::after, .learn-arrow { transition: transform 220ms ease-out; }
   .home-refined .connect-arrow { transition: background-color 220ms ease-out, color 220ms ease-out, transform 220ms ease-out; }
+  .home-refined .connect-button > span:first-child { transition: color 220ms ease-out; }
 }
 
 /* A drawing explains the relationship between the three activities. */
