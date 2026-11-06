@@ -84,6 +84,7 @@
   function measureLines() {
     clearLines();
     const titleLines=measureCover(title,100);
+    heading.style.setProperty('--activity-title-end',(700+(titleLines-1)*140)+'ms');
     const captionStart=640+(titleLines-1)*140;
     const captionLines=measureCover(caption,captionStart);
     const bodyStart=captionStart+540+(captionLines-1)*140;

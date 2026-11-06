@@ -18,7 +18,7 @@
 @media (prefers-reduced-motion: no-preference) {
   .refine-activity-visual { transition: opacity 400ms ease-out; }
   .activity-heading[data-activity-reveal="pending"] .refine-activity-visual { opacity: 0; }
-  .activity-heading[data-activity-reveal="playing"] .refine-activity-visual { transition-delay: 200ms; }
+  .activity-heading[data-activity-reveal="playing"] .refine-activity-visual { transition-delay: var(--activity-title-end,700ms); }
 }
 .refine-activity-visual[data-flow-fit] { width: min(100%,var(--flow-fit-width)); margin-top: 16px; }
 .refine-activity-visual[data-flow-hidden] { display: none; }
