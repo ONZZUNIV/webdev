@@ -6,31 +6,36 @@
 .home-refined .about-copy h1 > .heading-line { display: block; }
 .home-refined .about-copy h1 > .heading-line:nth-child(2) { color: var(--blue); }
 .home-refined .about[data-about-reveal] [data-about-title-line]:last-child { color: var(--blue); }
-.home-refined .about .text-link { padding-bottom: 6px; border-bottom: 1px solid var(--refine-line); }
-/* リンクの反応だけを追加する。遷移先はURLが指定されるまで未設定とする。 */
-.home-refined .about .text-link { position: relative; }
-.home-refined .about .text-link::after { content: ""; position: absolute; inset: auto 0 -1px; height: 1px; background: var(--blue); transform: scaleX(0); transform-origin: left; }
+.home-refined :is(.about .text-link,.activity-detail-link) { padding-bottom: 6px; border-bottom: 1px solid var(--refine-line); }
+/* 本文の詳細リンクとCONNECTの矢印に、控えめな操作時の反応を付ける。 */
+.home-refined :is(.about .text-link,.activity-detail-link) { position: relative; }
+.home-refined :is(.about .text-link,.activity-detail-link)::after { content: ""; position: absolute; inset: auto 0 -1px; height: 1px; background: var(--blue); transform: scaleX(0); transform-origin: left; }
 .learn-arrow { display: inline-block; }
-.home-refined .about .text-link:focus-visible { color: var(--blue); }
-.home-refined .about .text-link:focus-visible::after { transform: scaleX(1); }
-.home-refined .about .text-link:focus-visible .learn-arrow { transform: translateX(3px); }
+.home-refined :is(.about .text-link,.activity-detail-link):focus-visible { color: var(--blue); }
+.home-refined :is(.about .text-link,.activity-detail-link):focus-visible::after { transform: scaleX(1); }
+.home-refined :is(.about .text-link,.activity-detail-link):focus-visible .learn-arrow { transform: translateX(3px); }
 .home-refined .connect-button:focus-visible { color: var(--blue); }
 .home-refined .connect-button:focus-visible .connect-arrow { background: var(--blue); color: #fff; transform: translate(2px,-2px); }
 @media (hover: hover) and (pointer: fine) {
-  .home-refined .about .text-link:hover { color: var(--blue); }
-  .home-refined .about .text-link:hover::after { transform: scaleX(1); }
-  .home-refined .about .text-link:hover .learn-arrow { transform: translateX(3px); }
+  .home-refined :is(.about .text-link,.activity-detail-link):hover { color: var(--blue); }
+  .home-refined :is(.about .text-link,.activity-detail-link):hover::after { transform: scaleX(1); }
+  .home-refined :is(.about .text-link,.activity-detail-link):hover .learn-arrow { transform: translateX(3px); }
   .home-refined .connect-button > span:first-child:hover { color: var(--blue); }
   .home-refined .connect-button > .connect-arrow:hover { background: var(--blue); color: #fff; transform: translate(2px,-2px); }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .home-refined .about .text-link, .home-refined .connect-button { transition: color 220ms ease-out; }
-  .home-refined .about .text-link::after, .learn-arrow { transition: transform 220ms ease-out; }
+  .home-refined :is(.about .text-link,.activity-detail-link), .home-refined .connect-button { transition: color 220ms ease-out; }
+  .home-refined :is(.about .text-link,.activity-detail-link)::after, .learn-arrow { transition: transform 220ms ease-out; }
   .home-refined .connect-arrow { transition: background-color 220ms ease-out, color 220ms ease-out, transform 220ms ease-out; }
   .home-refined .connect-button > span:first-child { transition: color 220ms ease-out; }
 }
 
 /* 3つの活動のつながりを図で表す。 */
+.home-refined .activity-detail-link { display: flex; align-items: center; gap: 10px; width: fit-content; max-width: 100%; min-height: 44px; margin: 24px 0 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .activity-heading[data-activity-reveal] .activity-detail-link { opacity: 0; }
+  .activity-heading[data-activity-reveal="playing"] .activity-detail-link { animation: about-copy-fade 400ms ease-out var(--activity-body-delay,840ms) both; }
+}
 .home-refined .activity-layout { position: relative; isolation: isolate; }
 .home-refined .activity-heading, .home-refined .activity-list { z-index: 1; }
 .refine-activity-surface { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }

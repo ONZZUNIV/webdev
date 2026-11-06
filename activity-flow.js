@@ -7,6 +7,7 @@
   const animations = new Set();
   const heading = stage.querySelector('.activity-heading');
   const copy = stage.querySelector('.activity-intro > .body-copy');
+  const link = stage.querySelector('.activity-detail-link');
   const labels = visual.querySelector('figcaption');
   let fitFrame = 0;
   function fit() {
@@ -21,12 +22,14 @@
     const panel = stage.querySelector('.activity-layout');
     const panelStyle = getComputedStyle(panel);
     const room = panel.clientHeight - parseFloat(panelStyle.paddingTop) - parseFloat(panelStyle.paddingBottom);
-    const base = copy.getBoundingClientRect().bottom - heading.getBoundingClientRect().top;
+    // 詳細リンクも含めて残りの高さを計測し、図だけを必要に応じて縮める。
+    const base = (link || copy).getBoundingClientRect().bottom - heading.getBoundingClientRect().top;
     const available = room - base - 16 - labels.getBoundingClientRect().height - 4;
     const width = Math.min(440, copy.parentElement.clientWidth, Math.floor(available * 480 / 140));
+    const naturalFits = room - base - 32 - labels.getBoundingClientRect().height - 4 >= width * 140 / 480;
     // 3つの図が読める下限を240pxとする。この値は見た目に基づく調整値。
     visual.toggleAttribute('data-flow-hidden', width < 240);
-    visual.toggleAttribute('data-flow-fit', width < 440);
+    visual.toggleAttribute('data-flow-fit', width < 440 || !naturalFits);
     const value = Math.max(0, width) + 'px';
     if (visual.style.getPropertyValue('--flow-fit-width') !== value) visual.style.setProperty('--flow-fit-width', value);
   }
