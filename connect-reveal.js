@@ -13,6 +13,7 @@
   let viewportReady = false, pageShown = document.readyState === 'complete';
   let ready = false, headerStarted = false, headerDone = false, stopped = false;
   let headerStart = 0, headerEnd = 830, cardDelay = 520;
+  let layoutWidth = innerWidth;
   const states = new Map(cards.map(card => [card, 'pending'])), deadlines = new Map();
   const clearLines = () => title.querySelectorAll('[data-connect-cover-line]').forEach(line => line.remove());
   function settleViewport() {
@@ -104,7 +105,7 @@
     const atEnd = scrollY >= maxScroll-1;
     if (!headerDone) {
       const box = banner.getBoundingClientRect();
-      if (box.bottom <= 0) finishHeader();
+      if (!headerStarted && box.bottom <= 0) finishHeader();
       else if (ready && !headerStarted && box.top < innerHeight && (box.top <= innerHeight*.85 || atEnd)) startHeader();
     }
     const cardsReady = headerDone || headerStarted && performance.now()-headerStart >= cardDelay;
@@ -117,6 +118,9 @@
   }
   function schedule() { if (!stopped && !frame) frame = requestAnimationFrame(check); }
   function resize() {
+    // アドレスバーの開閉など、高さだけの変更では表示中の演出を続ける。
+    if (layoutWidth === innerWidth) { schedule(); return; }
+    layoutWidth = innerWidth;
     if (!headerDone) {
       if (headerStarted) finishHeader();
       else if (ready) { try { measureLines(); } catch { finishHeader(); } }

@@ -17,6 +17,7 @@
   let ready = false;
   let inView = false;
   let lineCount = 0;
+  let layoutWidth = innerWidth;
 
   function clearLines() {
     title.querySelectorAll('[data-about-title-line]').forEach(line => line.remove());
@@ -30,7 +31,8 @@
     observer?.disconnect();
     window.removeEventListener('scroll', revealIfPassed);
     window.removeEventListener('resize', refreshLines);
-    window.removeEventListener('pagehide', finish);
+    window.removeEventListener('pagehide', suspend);
+    window.removeEventListener('pageshow', resume);
     document.removeEventListener('visibilitychange', revealIfHidden);
     motion.removeEventListener?.('change', revealIfReduced);
     link.removeEventListener('animationend', revealIfEnded);
@@ -110,16 +112,22 @@
 
   function refreshLines() {
     if (finished || !ready) return;
-    // 再生中にサイズが変わったら表示を完了し、古いマスクを残さない。
+    // 高さだけの変更では文字の行分けは変わらないため、再生を継続する。
+    if (layoutWidth === innerWidth) return;
+    layoutWidth = innerWidth;
+    // 幅の変更で文字が折り返した場合は、古いマスクを残さず通常表示にする。
     if (started) { finish(); return; }
     try { measureLines(); } catch { finish(); }
   }
 
   function revealIfPassed() {
     // 一度の移動で画面を通過すると、Intersection Observerが通知しない場合がある。
-    if (title.getBoundingClientRect().bottom <= 0) finish();
+    if (!started && title.getBoundingClientRect().bottom <= 0) finish();
   }
-  function revealIfHidden() { if (document.hidden) finish(); }
+  // 未表示の演出は離脱で消費せず、再生中だけ通常表示にして復帰時の隠れ残りを防ぐ。
+  function suspend() { if (started) finish(); }
+  function resume() { revealIfPassed(); if (inView) start(); }
+  function revealIfHidden() { if (document.hidden) suspend(); else resume(); }
   function revealIfReduced(event) { if (event.matches) finish(); }
   function revealIfEnded(event) {
     if (event.target === link && event.animationName === 'about-copy-fade') finish();
@@ -127,7 +135,8 @@
 
   const start = () => {
     if (started || finished || !ready) return;
-    if (motion.matches || document.hidden) { finish(); return; }
+    if (document.hidden) return;
+    if (motion.matches) { finish(); return; }
     started = true;
     about.dataset.aboutReveal = 'playing';
     deadline = window.setTimeout(finish, 1500 + (lineCount - 1) * 140);
@@ -138,13 +147,14 @@
       for (const entry of entries) {
         inView = entry.isIntersecting;
         if (inView) start();
-        else if (entry.boundingClientRect.bottom <= 0) finish();
+        else if (!started && entry.boundingClientRect.bottom <= 0) finish();
       }
     }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
 
     window.addEventListener('scroll', revealIfPassed, { passive: true });
     window.addEventListener('resize', refreshLines, { passive: true });
-    window.addEventListener('pagehide', finish);
+    window.addEventListener('pagehide', suspend);
+    window.addEventListener('pageshow', resume);
     document.addEventListener('visibilitychange', revealIfHidden);
     motion.addEventListener?.('change', revealIfReduced);
     link.addEventListener('animationend', revealIfEnded);

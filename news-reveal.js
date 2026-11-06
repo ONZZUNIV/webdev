@@ -39,7 +39,7 @@
     frame = 0;
     if (finished || !viewportReady || document.hidden) return;
     const box = text.getBoundingClientRect();
-    if (box.bottom <= 0 || document.documentElement.scrollHeight <= innerHeight + 1) { finish(); return; }
+    if (!started && (box.bottom <= 0 || document.documentElement.scrollHeight <= innerHeight + 1)) { finish(); return; }
     if (!started && box.top <= innerHeight * .85 && box.bottom > 0) {
       started = true;
       label.dataset.newsReveal = 'playing';
@@ -47,7 +47,7 @@
     }
   }
   function schedule() { if (!finished && !frame) frame = requestAnimationFrame(check); }
-  function resize() { if (started) finish(); else schedule(); }
+  function resize() { schedule(); }
   function suspend() {
     viewportReady = false; cancelAnimationFrame(viewportFrame);
     // 未表示の内容は登場待ちを維持し、再生中のものだけを完了する。

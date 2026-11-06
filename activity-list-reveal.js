@@ -4,6 +4,7 @@ const articleReveal = (() => {
   const states = new Map(), deadlines = new Map(), callbacks = new Map();
   const all = [...document.querySelectorAll('.activity-item')];
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  let layoutWidth = innerWidth;
   function finish(item) {
     const callback = callbacks.get(item);
     callbacks.delete(item); clearTimeout(deadlines.get(item)); deadlines.delete(item);
@@ -71,11 +72,16 @@ const articleReveal = (() => {
     const item=event.target.closest('.activity-item');
     if(item&&states.get(item)==='playing'&&event.target.matches('.activity-copy>.body-copy')&&event.animationName==='about-copy-fade')finish(item);
   });
-  window.addEventListener('resize',finishPlaying,{passive:true});
+  window.addEventListener('resize',()=>{
+    // 高さだけの変更では、項目内の登場演出を完了扱いにしない。
+    if (layoutWidth === innerWidth) return;
+    layoutWidth = innerWidth;
+    finishPlaying();
+  },{passive:true});
   window.addEventListener('pagehide',finishPlaying);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)finishPlaying();});
   motion.addEventListener?.('change',event=>{if(event.matches)finishAll();});
-  return {prepareAll:()=>all.forEach(prepare),play,finish,finishAll,state:item=>states.get(item)};
+  return {prepareAll:()=>all.forEach(prepare),play,finish,finishAll,finishPlaying,state:item=>states.get(item)};
 })();
 
 // ページのスクロールで停止位置を選び、スロットだけを滑らかに移動する。
@@ -361,8 +367,6 @@ const articleReveal = (() => {
   if (motion.matches) return;
 
   let frame, observer, headingObserver, layoutObserver, stopped = false;
-  let stackedFirstScroll;
-  let titleShown = !heading.hasAttribute('data-activity-reveal');
   const deadlines = new Map();
   const pending = () => items.filter(item => item.dataset.activityItemReveal === 'pending');
   function show(item) {
@@ -383,11 +387,11 @@ const articleReveal = (() => {
     cancelAnimationFrame(frame);
     observer?.disconnect(); headingObserver?.disconnect(); layoutObserver?.disconnect();
     window.removeEventListener('scroll', schedule);
-    window.removeEventListener('resize', finish);
-    window.removeEventListener('pagehide', finish);
+    window.removeEventListener('resize', resize);
+    window.removeEventListener('pagehide', suspend);
+    window.removeEventListener('pageshow', schedule);
     document.removeEventListener('visibilitychange', hidden);
     motion.removeEventListener?.('change', reduced);
-    title.removeEventListener('animationend', titleEnded);
   }
   function reveal(item) {
     item.dataset.activityItemReveal = 'playing';
@@ -399,7 +403,7 @@ const articleReveal = (() => {
   }
   function check() {
     frame = 0;
-    if (stopped) return;
+    if (stopped || document.hidden) return;
     if (list.closest('[data-activity-slot]')) { finish(); return; }
     const viewport = innerHeight;
     const maxScroll = document.documentElement.scrollHeight - viewport;
@@ -409,7 +413,7 @@ const articleReveal = (() => {
     // 見出しをほぼ通過すると、下方向の操作では導入の50%表示条件に再び達しないため、
     // その間も通常の活動一覧を閲覧できるようにする。
     const titlePastHalf = box.top < 0 && box.bottom < box.height * .5;
-    const leftReady = !heading.hasAttribute('data-activity-reveal') || titlePastHalf || box.bottom <= 0 || (!desktop && titleShown);
+    const leftReady = !desktop || !heading.hasAttribute('data-activity-reveal') || titlePastHalf || box.bottom <= 0;
     // 固定表示された見出しの画面上の位置は動かないため、元のグリッド位置を基準にする。
     // 固定後の座標から表示開始の境界を求めない。
     const headingBox = heading.getBoundingClientRect();
@@ -425,12 +429,10 @@ const articleReveal = (() => {
       const rect = item.getBoundingClientRect();
       if (rect.bottom <= 0) { show(item); return; }
       const index = items.indexOf(item);
-      const entry = rect.top + scrollY - viewport * .82;
-      const stackedGate = stackedFirstScroll === undefined ? entry :
-        Math.max(entry, stackedFirstScroll + index * Math.min(64, Math.max(32, viewport * .08)));
-      const gate = Math.min(maxScroll, desktop ? Math.max(firstGate + index * step, entry) : stackedGate);
+      // 1カラムは各項目自身が画面高85%に入るのを待ち、導入の再生には依存させない。
+      const entry = rect.top + scrollY - viewport * (desktop ? .82 : .85);
+      const gate = Math.min(maxScroll, desktop ? Math.max(firstGate + index * step, entry) : entry);
       if (leftReady && scrollY >= gate && rect.top < viewport) {
-        if (!desktop && index === 0) stackedFirstScroll = scrollY;
         eligible.push(item);
       }
     });
@@ -440,14 +442,13 @@ const articleReveal = (() => {
     settle();
   }
   function schedule() { if (!stopped && !frame) frame = requestAnimationFrame(check); }
-  function titleEnded(event) {
-    if (event.animationName === 'about-cover-sweep' &&
-        event.target === title.querySelector('[data-activity-cover-line]:last-child')) {
-      titleShown = true;
-      schedule();
-    }
+  function resize() {
+    // アドレスバーの開閉などで高さが変わっても、画面外の未表示項目は完了にしない。
+    if (list.closest('[data-activity-slot]')) { finish(); return; }
+    schedule();
   }
-  function hidden() { if (document.hidden) finish(); }
+  function suspend() { articleReveal.finishPlaying(); }
+  function hidden() { if (document.hidden) suspend(); else schedule(); }
   function reduced(event) { if (event.matches) finish(); }
 
   try {
@@ -461,10 +462,10 @@ const articleReveal = (() => {
       layoutObserver = new ResizeObserver(schedule);
       layoutObserver.observe(document.querySelector('.about-activity-boundary') || list);
     }
-    title.addEventListener('animationend', titleEnded);
     window.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', finish, { passive: true });
-    window.addEventListener('pagehide', finish);
+    window.addEventListener('resize', resize, { passive: true });
+    window.addEventListener('pagehide', suspend);
+    window.addEventListener('pageshow', schedule);
     document.addEventListener('visibilitychange', hidden);
     motion.addEventListener?.('change', reduced);
     document.fonts?.ready.then(schedule, finish);

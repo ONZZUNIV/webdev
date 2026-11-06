@@ -13,6 +13,7 @@
 
   let observer, layoutObserver, frame, deadline, fontDeadline;
   let ready = false, started = false, finished = false, sequenceEnd = 1240;
+  let layoutWidth = innerWidth;
   const clearLines = () => heading.querySelectorAll('[data-activity-cover-line]').forEach(line => line.remove());
   function finish() {
     if (finished) return;
@@ -24,7 +25,8 @@
     layoutObserver?.disconnect();
     window.removeEventListener('scroll', scheduleCheck);
     window.removeEventListener('resize', resize);
-    window.removeEventListener('pagehide', finish);
+    window.removeEventListener('pagehide', suspend);
+    window.removeEventListener('pageshow', scheduleCheck);
     document.removeEventListener('visibilitychange', hidden);
     motion.removeEventListener?.('change', reduced);
     body.removeEventListener('animationend', ended);
@@ -101,11 +103,16 @@
   }
   function check() {
     frame=0;
-    if (finished) return;
+    if (finished || document.hidden) return;
     const viewport=window.innerHeight, box=section.getBoundingClientRect(), text=title.getBoundingClientRect();
     // 導入を飛び越えた場合は、Intersection Observerの通知がなくても表示する。
-    if (text.bottom<=0 || document.documentElement.scrollHeight<=viewport+1) { finish(); return; }
+    if (!started && (text.bottom<=0 || document.documentElement.scrollHeight<=viewport+1)) { finish(); return; }
     if (started || !ready) return;
+    // 1カラムでは、他セクションと同じ画面高85%の位置で見出しを表示する。
+    if (matchMedia('(max-width: 1199.98px)').matches) {
+      if (text.top <= viewport * .85 && text.bottom > 0) start();
+      return;
+    }
     const visible=Math.max(0,Math.min(viewport,text.bottom)-Math.max(0,text.top));
     const rects=aboutText.map(el=>el.getBoundingClientRect());
     const textCovered=rects.every(rect=>{
@@ -120,10 +127,14 @@
   }
   function resize() {
     if (finished) return;
+    // 高さだけが変わった場合は、開始位置の再判定だけを行う。
+    if (layoutWidth === innerWidth) { scheduleCheck(); return; }
+    layoutWidth = innerWidth;
     if (started) { finish(); return; }
     try { if (ready) measureLines(); scheduleCheck(); } catch { finish(); }
   }
-  function hidden() { if (document.hidden) finish(); }
+  function suspend() { if (started) finish(); }
+  function hidden() { if (document.hidden) suspend(); else scheduleCheck(); }
   function reduced(event) { if (event.matches) finish(); }
   function ended(event) {
     if (event.target===body && event.animationName==='about-copy-fade-up') finish();
@@ -138,7 +149,8 @@
     }
     window.addEventListener('scroll',scheduleCheck,{passive:true});
     window.addEventListener('resize',resize,{passive:true});
-    window.addEventListener('pagehide',finish);
+    window.addEventListener('pagehide',suspend);
+    window.addEventListener('pageshow',scheduleCheck);
     document.addEventListener('visibilitychange',hidden);
     motion.addEventListener?.('change',reduced);
     body.addEventListener('animationend',ended);
