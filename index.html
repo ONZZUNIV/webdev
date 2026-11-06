@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="connect.css">
   <link rel="stylesheet" href="refinements.css">
+  <link rel="stylesheet" href="site.css">
   <script src="about-reveal.js" defer></script>
   <script src="section-overlap.js" defer></script>
   <script src="activity-reveal.js" defer></script>
@@ -16,7 +17,12 @@
   <script src="activity-flow.js" defer></script>
 </head>
 <body class="home-refined" id="top">
-  <main class="home" data-figma-node="1:3">
+  <a class="site-skip" href="#main">本文へ移動</a>
+<header class="site-header">
+  <a class="site-home" href="index.html" aria-current="page">HOME</a>
+  <nav class="site-nav" aria-label="メインナビゲーション"><a href="about.html">About</a><a href="activity.html">Activity</a><a href="index.html#connect">Connect</a></nav>
+</header>
+  <main id="main" class="home" data-figma-node="1:3">
     <div class="hero" aria-hidden="true" data-figma-node="1:9">
       <img src="assets/hero-placeholder.svg" alt="" width="1440" height="800">
     </div>
@@ -139,8 +145,8 @@
           <a class="connect-button" role="link" aria-disabled="true"><span>CONTACT</span><span class="connect-arrow" aria-hidden="true">↗</span></a>
         </article>
       </div>
-      <footer class="connect-footer"><a href="#top">Back to top <span aria-hidden="true">↑</span></a></footer>
     </section>
   </main>
+<footer class="site-footer"><nav aria-label="フッターナビゲーション"><a href="index.html">HOME</a><a href="about.html">About</a><a href="activity.html">Activity</a><a href="index.html#connect">Connect</a></nav><a href="#top">ページ上部へ <span aria-hidden="true">↑</span></a></footer>
 </body>
 </html>

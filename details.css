@@ -4,15 +4,6 @@
 .detail-page :where(p,dd) { overflow-wrap: anywhere; }
 .detail-page p { line-height: 1.95; letter-spacing: .025em; }
 .detail-page a:focus-visible { outline: 2px solid var(--blue); outline-offset: 5px; }
-.detail-skip { position: absolute; left: 20px; top: -100px; z-index: 3; padding: 12px; background: white; }
-.detail-skip:focus { top: 12px; }
-.detail-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-inline: var(--detail-gutter); min-height: 96px; border-bottom: 1px solid var(--detail-line); }
-.detail-home { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; font-size: 13px; letter-spacing: .12em; }
-.detail-home::before { content: ""; width: 18px; height: 18px; border: 1px solid var(--blue); border-radius: 50%; }
-.detail-nav { display: flex; gap: clamp(16px,3vw,48px); font-size: 14px; }
-.detail-nav a { display: inline-flex; align-items: center; min-height: 44px; border-bottom: 1px solid transparent; }
-.detail-nav a[aria-current="page"] { color: var(--blue); border-color: var(--blue); }
-.detail-nav a:hover,.detail-home:hover { color: var(--blue); }
 .detail-hero { position: relative; padding: clamp(64px,7vw,128px) var(--detail-gutter) 0; }
 .detail-eyebrow { display: inline-flex; align-items: center; gap: 16px; font-size: 12px; letter-spacing: .16em; color: var(--blue); }
 .detail-eyebrow::after { content: ""; width: 40px; height: 1px; background: currentColor; }
@@ -63,10 +54,6 @@
 .detail-next-link small { display: block; font-size: 14px; font-weight: 400; letter-spacing: .05em; margin-top: 12px; }
 .detail-arrow { display: grid; place-items: center; flex: none; width: 64px; height: 64px; border: 1px solid var(--blue); border-radius: 50%; font-size: 28px; color: var(--blue); }
 .detail-next-link:is(:hover,:focus-visible) .detail-arrow { color: white; background: var(--blue); }
-.detail-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px 32px; padding: 24px var(--detail-gutter); border-top: 1px solid var(--detail-line); font-size: 12px; }
-.detail-footer a { display: inline-flex; align-items: center; min-height: 44px; }
-.detail-footer nav { display: flex; gap: 24px; }
-.detail-draft { align-self: center; color: #657174; font-size: 11px; }
 /* 活動の詳細は通常のスクロールで読む。スロットや強制スクロールは使用しない。 */
 .detail-activity-hero { background: var(--pale-blue); }
 .detail-activity-hero .detail-hero-grid { grid-template-columns: 1.2fr 1fr; }
@@ -111,10 +98,6 @@
   .detail-activity-row { gap: 40px; grid-template-columns: .8fr 1.2fr; }
 }
 @media (max-width: 699.98px) {
-  .detail-header { min-height: 80px; gap: 12px; }
-  .detail-nav { gap: 16px; font-size: 13px; }
-  .detail-home { font-size: 11px; gap: 8px; }
-  .detail-home::before { width: 14px; height: 14px; }
   .detail-hero h1 { font-size: clamp(64px,15vw,104px); }
   .detail-hero-grid,.detail-activity-hero .detail-hero-grid { grid-template-columns: 1fr; gap: 40px; }
   .detail-orbit { width: 160px; margin: 0 0 0 auto; }
@@ -133,6 +116,7 @@
   .detail-flow { max-width: 440px; width: 100%; margin-inline: auto; gap: 16px; }
   .detail-next-link { font-size: 40px; }
   .detail-arrow { width: 48px; height: 48px; font-size: 22px; }
-  .detail-footer { flex-direction: column; }
-  .detail-draft { align-self: start; }
 }
+
+/* 仮文の注記は共通フッターではなく詳細ページの本文末尾に置く。 */
+.detail-draft { padding: 0 var(--detail-gutter) 24px; color: #657174; font-size: 11px; }

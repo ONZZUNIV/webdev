@@ -1,0 +1,25 @@
+/* 全ページで共用するヘッダー・フッター。本文のスタイルには適用しない。 */
+:root { --site-gutter: clamp(20px,6.25vw,144px); --site-line: #cbdde1; }
+.site-skip { position: absolute; left: 20px; top: -100px; z-index: 3; padding: 12px; background: white; }
+.site-skip:focus { top: 12px; }
+.site-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-inline: var(--site-gutter); min-height: 96px; border-bottom: 1px solid var(--site-line); color: #42494b; }
+.site-home { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; font-size: 13px; letter-spacing: .12em; }
+.site-home::before { content: ""; width: 18px; height: 18px; border: 1px solid var(--blue); border-radius: 50%; }
+.site-nav { display: flex; gap: clamp(16px,3vw,48px); font-size: 14px; }
+.site-nav a { display: inline-flex; align-items: center; min-height: 44px; border-bottom: 1px solid transparent; }
+.site-nav a[aria-current="page"],.site-home[aria-current="page"] { color: var(--blue); }
+.site-nav a[aria-current="page"] { border-color: var(--blue); }
+.site-header a:hover,.site-footer a:hover { color: var(--blue); }
+.site-header a:focus-visible,.site-footer a:focus-visible,.site-skip:focus-visible { outline: 2px solid var(--blue); outline-offset: 5px; }
+.site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px 32px; padding: 24px var(--site-gutter); border-top: 1px solid var(--site-line); color: #42494b; font-size: 12px; }
+.site-footer a { display: inline-flex; align-items: center; min-height: 44px; }
+.site-footer nav { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+/* CONNECT内の旧フッターを共通フッターにまとめた分、末尾の余白を確保する。 */
+.home-refined .connect { padding-bottom: clamp(32px,4vw,64px); }
+@media (max-width: 699.98px) {
+  .site-header { min-height: 80px; gap: 12px; }
+  .site-nav { gap: 16px; font-size: 13px; }
+  .site-home { font-size: 11px; gap: 8px; }
+  .site-home::before { width: 14px; height: 14px; }
+  .site-footer { align-items: flex-start; flex-direction: column; }
+}
