@@ -5,6 +5,42 @@
   if (!visual || typeof MutationObserver !== 'function' || typeof matchMedia !== 'function') return;
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const animations = new Set();
+  const heading = stage.querySelector('.activity-heading');
+  const copy = stage.querySelector('.activity-intro > .body-copy');
+  const labels = visual.querySelector('figcaption');
+  let fitFrame = 0;
+  function fit() {
+    fitFrame = 0;
+    // Only the fixed-height reel needs fitting. Ordinary flow can grow naturally.
+    if (!stage.hasAttribute('data-activity-slot')) {
+      visual.removeAttribute('data-flow-fit');
+      visual.removeAttribute('data-flow-hidden');
+      visual.style.removeProperty('--flow-fit-width');
+      return;
+    }
+    const panel = stage.querySelector('.activity-layout');
+    const panelStyle = getComputedStyle(panel);
+    const room = panel.clientHeight - parseFloat(panelStyle.paddingTop) - parseFloat(panelStyle.paddingBottom);
+    const base = copy.getBoundingClientRect().bottom - heading.getBoundingClientRect().top;
+    const available = room - base - 16 - labels.getBoundingClientRect().height - 4;
+    const width = Math.min(440, copy.parentElement.clientWidth, Math.floor(available * 480 / 140));
+    // 240px keeps the three symbols legible; this is a visual tuning value.
+    visual.toggleAttribute('data-flow-hidden', width < 240);
+    visual.toggleAttribute('data-flow-fit', width < 440);
+    const value = Math.max(0, width) + 'px';
+    if (visual.style.getPropertyValue('--flow-fit-width') !== value) visual.style.setProperty('--flow-fit-width', value);
+  }
+  function scheduleFit() { if (!fitFrame) fitFrame = requestAnimationFrame(fit); }
+  const fitObserver = new MutationObserver(scheduleFit);
+  fitObserver.observe(stage, { attributes: true, attributeFilter: ['data-activity-slot'] });
+  if (typeof ResizeObserver === 'function') {
+    const sizeObserver = new ResizeObserver(scheduleFit);
+    sizeObserver.observe(heading);
+    sizeObserver.observe(copy);
+  }
+  window.addEventListener('resize', scheduleFit, { passive: true });
+  document.fonts?.ready.then(scheduleFit);
+  scheduleFit();
   function index() {
     const raw = stage.dataset.activitySlotIndex;
     if (!stage.hasAttribute('data-activity-slot') || raw === undefined) return null;
