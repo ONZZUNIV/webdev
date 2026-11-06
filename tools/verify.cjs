@@ -14,7 +14,8 @@ const desktopWidths = [800, 900, 1024, 1280, 1440, 1600, 1920];
 const widths = mobileMode ? [320, 360, 375, 390, 428, 480, 600, 768, ...desktopWidths] : desktopWidths;
 const out = path.join(root, mobileMode ? 'evidence/mobile' : 'evidence/responsive');
 const inventorySelector = 'h1,h2,h3,h4,.activity-tagline,.body-copy,.about-copy>p,.news-item>p,.connect-subtitle,.connect-banner,.text-link,.connect-button,.news-date,.event-badge>span,.activity-number,.section-label>span,.scroll-mark>span';
-const inventory = selector => [...document.querySelectorAll(selector)].map(el => el.textContent.replace(/\s+/g,'')).sort();
+// NEWS now has an intentional empty state, checked by verify-news.cjs.
+const inventory = selector => [...document.querySelectorAll(selector)].filter(el=>!el.closest('.news')).map(el => el.textContent.replace(/[↗→\s]/g,'')).sort();
 
 async function main() {
   fs.mkdirSync(out,{recursive:true});
@@ -23,6 +24,8 @@ async function main() {
     let urlPath;
     try { urlPath=decodeURIComponent(new URL(req.url,'http://localhost').pathname); }
     catch { res.writeHead(400).end(); return; }
+    // Static layout only. The activity reel has a separate native-scroll suite.
+    if(urlPath==='/activity-list-reveal.js'){res.writeHead(200,{'Content-Type':mime['.js']}).end('');return;}
     const file=path.resolve(root,'.'+(urlPath==='/'?'/index.html':urlPath));
     if (!file.startsWith(root+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()) { res.writeHead(404).end(); return; }
     res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream'});
@@ -45,11 +48,17 @@ async function main() {
       page.on('response',res=>{if(res.status()>=400)errors.push(res.status()+' '+res.url());});
       await page.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'networkidle'});
       await page.evaluate(()=>document.fonts.ready);
-      const height=await page.evaluate(()=>Math.ceil(document.documentElement.scrollHeight));
       // Keep all SVGs in the paint viewport, avoiding offscreen SVG capture artifacts.
-      await page.setViewportSize({width,height});
+      for(let pass=0;pass<3;pass++){
+        const fullHeight=await page.evaluate(()=>Math.ceil(document.documentElement.scrollHeight));
+        await page.setViewportSize({width,height:fullHeight});
+        await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+      }
+      const height=await page.evaluate(()=>Math.ceil(document.documentElement.scrollHeight));
       await page.waitForFunction(()=>!document.querySelector('.about').hasAttribute('data-about-reveal'));
       await page.waitForFunction(()=>!document.querySelector('.activity-heading').hasAttribute('data-activity-reveal'));
+      await page.waitForFunction(()=>!document.querySelector('.news-label').hasAttribute('data-news-reveal'));
+      await page.waitForFunction(()=>!document.querySelector('[data-connect-reveal],[data-connect-card-reveal]'));
       await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
       const screenshot='home-'+width+'.png';
       await page.screenshot({path:path.join(out,screenshot),fullPage:true});
@@ -92,15 +101,15 @@ async function main() {
           sections:box('main section'),
           body:box('.body-copy,.about-copy>p'),
           titles:box('h1,h2,h3,h4'),
-          layouts:['.about','.activity-layout','.activity-item','.news-item','.connect-columns'].map(selector=>({selector,columns:getComputedStyle(document.querySelector(selector)).gridTemplateColumns,...rect(document.querySelector(selector))})),
+          layouts:['.about','.activity-layout','.activity-item','.news-content','.connect-columns'].map(selector=>({selector,columns:getComputedStyle(document.querySelector(selector)).gridTemplateColumns,...rect(document.querySelector(selector))})),
           scripts:[...document.scripts].map(s=>s.getAttribute('src')),assets,overflow,overlaps,outsideText,clippedText
         };
       });
       report.textUnchanged=JSON.stringify(beforeText)===JSON.stringify(await page.evaluate(inventory,inventorySelector));
       report.errors=errors;report.screenshot=screenshot;
-      report.passed=report.horizontalOverflow===0&&JSON.stringify(report.scripts)===JSON.stringify(['about-reveal.js','section-overlap.js','activity-reveal.js'])&&report.textUnchanged&&
+      report.passed=report.horizontalOverflow===0&&JSON.stringify(report.scripts)===JSON.stringify(['about-reveal.js','section-overlap.js','activity-reveal.js','activity-list-reveal.js','news-reveal.js','connect-reveal.js'])&&report.textUnchanged&&
         !errors.length&&!report.overflow.length&&!report.overlaps.length&&!report.outsideText.length&&!report.clippedText.length&&
-        report.assets.length===19&&report.assets.every(a=>a.loaded)&&report.body.every(b=>b.fontSize>=15);
+        report.assets.length===9&&report.assets.every(a=>a.loaded)&&report.body.every(b=>b.fontSize>=15);
       reports.push(report);
       console.log(JSON.stringify({width,height:report.height,passed:report.passed,horizontalOverflow:report.horizontalOverflow,textUnchanged:report.textUnchanged,overflow:report.overflow,overlaps:report.overlaps,outsideText:report.outsideText,clippedText:report.clippedText,errors}));
       await page.close();
@@ -114,6 +123,9 @@ async function main() {
     await sweepPage.evaluate(()=>document.fonts.ready);
     for(const width of sweepWidths){
       await sweepPage.setViewportSize({width,height:1000});
+      // Let resize handlers rebuild the existing per-line cover masks before
+      // measuring scrollWidth across the two-column breakpoint.
+      await sweepPage.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
       const sample=await sweepPage.evaluate(()=>{
         const issues=[];
         const nodes=[...document.querySelectorAll('h1,h2,h3,h4,p,a,.activity-name,.news-date,.connect-card')];

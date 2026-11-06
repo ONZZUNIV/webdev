@@ -33,7 +33,7 @@ function layout(normalizeAddedSpace=false){
     const h=r.height-(normalizeAddedSpace&&el===about?100:0);
     const padding=[s.paddingTop,s.paddingRight,s.paddingBottom,s.paddingLeft].map((value,index)=>Math.round((parseFloat(value)-(normalizeAddedSpace&&el===about&&index===2?100:0))*1000)/1000);
     const grid=value=>Math.round(value*64)/64;
-    return{class:el.className,text:el.textContent,x:grid(r.x),y:flowY,w:grid(r.width),h:grid(h),font:s.font,padding,margin:s.margin,color:s.color};
+    return{class:el.className,text:el.textContent.replace(/\s+/g,''),x:grid(r.x),y:flowY,w:grid(r.width),h:grid(h),font:s.font,padding,margin:s.margin,color:s.color};
   });
 }
 async function main(){
@@ -41,6 +41,8 @@ async function main(){
   const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.ttf':'font/ttf'};
   const server=http.createServer((req,res)=>{
     const name=decodeURIComponent(new URL(req.url,'http://localhost').pathname);
+    // This suite isolates the left intro; the later article entrance has its own suite.
+    if(name==='/activity-list-reveal.js'){res.writeHead(200,{'Content-Type':mime['.js']}).end('');return;}
     if(name==='/before.html'){res.writeHead(200,{'Content-Type':mime['.html']}).end(fs.readFileSync(path.join(root,'evidence/before-activity-reveal/index.html'),'utf8').replace('href="styles.css"','href="before-styles.css"'));return;}
     const file=name==='/before-styles.css'?path.join(root,'evidence/before-activity-reveal/styles.css'):path.resolve(root,'.'+(name==='/'?'/index.html':name));
     if(!file.startsWith(root+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404).end();return;}

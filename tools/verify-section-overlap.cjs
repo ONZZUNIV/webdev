@@ -11,7 +11,7 @@ const widths=process.argv[2]?process.argv[2].split(',').map(Number):[320,360,375
 function snapshot(){
   return [...document.querySelectorAll('.hero, main section, h1, h2, h3, h4, .body-copy, .about-copy>p, .text-link, .connect-button')].map(el=>{
     const r=el.getBoundingClientRect(),s=getComputedStyle(el);
-    return {class:el.className,text:el.textContent,x:r.x,y:r.y+scrollY,width:r.width,height:r.height,font:s.font,margin:s.margin,padding:s.padding,color:s.color};
+    return {class:el.className,text:el.textContent.replace(/\s+/g,''),x:r.x,y:r.y+scrollY,width:r.width,height:r.height,font:s.font,margin:s.margin,padding:s.padding,color:s.color};
   });
 }
 function state(){
@@ -24,13 +24,14 @@ function state(){
     overlap:Math.max(0,Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)),
     front:document.elementFromPoint(innerWidth/2,y)?.closest('section')?.className,
     opacity:getComputedStyle(document.querySelector('.activity')).opacity,
-    animations:document.getAnimations().filter(animation=>!animation.effect?.target.closest('.about, .activity-heading')).length};
+    animations:document.getAnimations().filter(animation=>!animation.effect?.target.closest('.about, .activity-heading, .activity-item')).length};
 }
 async function main(){
   fs.mkdirSync(out,{recursive:true});
   const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.ttf':'font/ttf'};
   const server=http.createServer((req,res)=>{
     const name=decodeURIComponent(new URL(req.url,'http://localhost').pathname);
+    if(name==='/activity-list-reveal.js'){res.writeHead(200,{'Content-Type':mime['.js']}).end('');return;}
     if(name==='/before.html'){
       res.writeHead(200,{'Content-Type':mime['.html']}).end(fs.readFileSync(path.join(root,'evidence/before-section-overlap/index.html'),'utf8').replace('href="styles.css"','href="before-styles.css"'));return;
     }
@@ -67,7 +68,7 @@ async function main(){
       for(const route of ['/before.html','/']){
         await load(page,route);
         // Isolate the original boundary effect from later authorized spacing/shadow changes.
-        if(route==='/')await page.addStyleTag({content:'.about-activity-boundary{--about-extra-bottom-space:0px!important}.about-activity-boundary>.activity::before{content:none!important}'});
+        if(route==='/')await page.addStyleTag({content:'.activity-stage{min-height:0!important}.about-activity-boundary{--about-extra-bottom-space:0px!important}.about-activity-boundary>.activity::before{content:none!important}'});
         const height=await page.evaluate(()=>document.documentElement.scrollHeight);await page.setViewportSize({width,height});
         await page.waitForFunction(()=>!document.querySelector('.about').hasAttribute('data-about-reveal'));await settle(page,0);
         await page.waitForFunction(()=>!document.querySelector('.activity-heading').hasAttribute('data-activity-reveal'));

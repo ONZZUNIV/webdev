@@ -124,6 +124,12 @@ a { color: inherit; text-decoration: none; }
 .news-item > p { min-width: 0; margin-left: .6875em; padding-top: .125em; font-weight: 400; line-height: 1.3125; letter-spacing: .1em; overflow-wrap: anywhere; }
 .news-rule { position: absolute; left: 0; bottom: 0; width: 100%; height: 2px; }
 .news-content .text-link { width: 6.25em; margin-top: 1em; }
+.news-empty { position: relative; padding: clamp(40px, 4.444444vw, 80px) clamp(0px, 1.597222vw, 30px); }
+.news-empty-title { color: var(--heading); font-size: clamp(18px, 1.388889vw, 24px); font-weight: 500; line-height: 1.6; }
+.news-empty > .body-copy { max-width: 40em; margin-top: 12px; }
+@media (max-width: 799.98px) {
+  .news-empty { padding-inline: 0; }
+}
 
 .connect {
   width: calc(100% - 1px);
@@ -295,6 +301,23 @@ a { color: inherit; text-decoration: none; }
   from { clip-path: var(--about-label-clip-start); }
   to { clip-path: inset(0); }
 }
+
+/* NEWS: the existing text-then-rule label reveal, followed by a simple copy fade. */
+.news-label[data-news-reveal] > * {
+  --about-label-clip-start: inset(0 0 100% 0);
+  clip-path: var(--about-label-clip-start);
+}
+@media (min-width: 800px) {
+  .news-label[data-news-reveal] > * { --about-label-clip-start: inset(0 100% 0 0); }
+}
+.news-label[data-news-reveal="playing"] > * { animation: about-label-reveal 350ms ease-out both; }
+.news-label[data-news-reveal="playing"] > img { animation-delay: 350ms; }
+.news-label[data-news-reveal] + .news-content .news-empty > p { opacity: 0; }
+.news-label[data-news-reveal="playing"] + .news-content .news-empty > p { animation: about-copy-fade 400ms ease-out 350ms both; }
+@media (prefers-reduced-motion: reduce) {
+  .news-label[data-news-reveal] > * { clip-path: none; animation: none; }
+  .news-label[data-news-reveal] + .news-content .news-empty > p { opacity: 1; animation: none; }
+}
 @keyframes about-title-unmask {
   0%, 49.9% { opacity: 1; }
   50%, 100% { opacity: 0; }
@@ -311,6 +334,36 @@ a { color: inherit; text-decoration: none; }
 @keyframes about-copy-fade-up {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* CONNECT keeps its band and divider still; only text and calls to action enter. */
+.connect[data-connect-reveal] .connect-banner > span { display: inline-block; clip-path: inset(100% 0 0); }
+.connect[data-connect-reveal] > h2 { position: relative; isolation: isolate; }
+.connect[data-connect-reveal]:not([data-connect-title-ready]) > h2 { opacity: 0; }
+.connect[data-connect-reveal] > .connect-subtitle { opacity: 0; }
+.connect[data-connect-reveal] [data-connect-cover-line] { position: absolute; overflow: hidden; pointer-events: none; }
+.connect[data-connect-reveal] [data-connect-cover-line]::before,
+.connect[data-connect-reveal] [data-connect-cover-line]::after { content: ""; position: absolute; inset: 0; pointer-events: none; }
+.connect[data-connect-reveal] [data-connect-cover-line]::before { z-index: 1; background: var(--pale-blue); }
+.connect[data-connect-reveal] [data-connect-cover-line]::after { z-index: 2; background: currentColor; transform: translateX(-101%); }
+.connect[data-connect-reveal="playing"] .connect-banner > span { animation: connect-banner-reveal 350ms ease-out both; }
+.connect[data-connect-reveal="playing"] [data-connect-cover-line]::before { animation: about-title-unmask 600ms linear var(--connect-line-delay) both; }
+.connect[data-connect-reveal="playing"] [data-connect-cover-line]::after { animation: about-cover-sweep 600ms cubic-bezier(.65,0,.35,1) var(--connect-line-delay) both; }
+.connect[data-connect-reveal="playing"] > .connect-subtitle { animation: about-copy-fade 350ms ease-out 480ms both; }
+.connect-card[data-connect-card-reveal] > :is(h3,p) { opacity: 0; transform: translateY(12px); }
+.connect-card[data-connect-card-reveal] > .connect-button { opacity: 0; }
+.connect-card[data-connect-card-reveal="playing"] > :is(h3,p) { animation: about-copy-fade-up 400ms ease-out both; }
+.connect-card[data-connect-card-reveal="playing"] > .connect-button { animation: about-copy-fade 350ms ease-out 100ms both; }
+@keyframes connect-banner-reveal {
+  from { clip-path: inset(100% 0 0); }
+  to { clip-path: inset(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .connect[data-connect-reveal] .connect-banner > span { clip-path: none; animation: none; }
+  .connect[data-connect-reveal]:not([data-connect-title-ready]) > h2 { opacity: 1; }
+  .connect[data-connect-reveal] > :is(h2,.connect-subtitle),
+  .connect-card[data-connect-card-reveal] > :is(h3,p,.connect-button) { opacity: 1; transform: none; animation: none; }
+  .connect[data-connect-reveal] [data-connect-cover-line] { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -336,7 +389,7 @@ a { color: inherit; text-decoration: none; }
   .about-activity-boundary[data-overlap-ready] > .activity { z-index: 1; }
 }
 
-/* ACTIVITY's left introduction reuses ABOUT's motion; the list is untouched. */
+/* ACTIVITY's left introduction reuses ABOUT's motion independently of the list. */
 .activity-heading[data-activity-reveal] .activity-label > * {
   --about-label-clip-start: inset(0 0 100% 0);
   clip-path: var(--about-label-clip-start);
@@ -386,4 +439,92 @@ a { color: inherit; text-decoration: none; }
 }
 @media (max-width: 799.98px) {
   .about-activity-boundary > .about { padding-bottom: calc(var(--mobile-section-space) + var(--about-extra-bottom-space)); }
+}
+
+/* Keep the desktop introduction within its original grid and readable on short screens. */
+@media (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
+  .activity-heading, .activity-list { align-self: start; }
+  .activity-stage[data-activity-panels-sticky] {
+    min-height: calc(var(--activity-panel-height) + var(--activity-scroll-distance));
+  }
+  .activity-stage[data-activity-panels-sticky] > .activity-layout {
+    position: sticky;
+    top: min(clamp(24px, 7vh, 96px), calc(100vh - var(--activity-panel-height) - 24px));
+    top: min(clamp(24px, 7svh, 96px), calc(100svh - var(--activity-panel-height) - 24px));
+  }
+  .activity-heading[data-activity-sticky] {
+    position: sticky;
+    top: min(clamp(24px, 7vh, 96px), calc(100vh - var(--activity-heading-height) - 24px));
+    top: min(clamp(24px, 7svh, 96px), calc(100svh - var(--activity-heading-height) - 24px));
+  }
+}
+/* ACTIVITY articles, including their existing divider, reveal as one unit. */
+.activity-item[data-activity-item-reveal] { opacity: 0; transform: translateY(12px); }
+.activity-item[data-activity-item-reveal="playing"] { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .activity-item[data-activity-item-reveal] { opacity: 1; transform: none; animation: none; }
+}
+
+/* A scroll-driven reel: active glyphs align with the left-hand tagline. */
+@media (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
+  .activity[data-activity-viewport] { padding-block: 0; border: 0; background: transparent; }
+  .activity-stage[data-activity-slot] {
+    min-height: calc(100vh + var(--activity-scroll-distance));
+    min-height: calc(100svh + var(--activity-scroll-distance));
+  }
+  .activity-stage[data-activity-slot] > .activity-layout {
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    padding-block: var(--activity-panel-inset);
+    align-content: start;
+    border: 1px solid var(--outline);
+    background: var(--pale-blue);
+  }
+  /* The shared panel releases both columns together at the end of Try. */
+  [data-activity-slot] .activity-heading[data-activity-sticky] { position: static; }
+  [data-activity-slot] .activity-list {
+    position: relative;
+    height: var(--activity-slot-height);
+    overflow: visible;
+    clip-path: inset(calc(-1 * var(--activity-slot-bleed, 0px)) 0 0);
+    perspective: 1000px;
+    opacity: 0;
+    transition: none;
+  }
+  [data-activity-slot-visible] .activity-list { opacity: 1; }
+  [data-activity-slot] .activity-item {
+    position: absolute;
+    inset-inline: 0;
+    top: var(--activity-slot-anchor, 50%);
+    margin: 0;
+    padding-bottom: 24px;
+    opacity: var(--slot-opacity, 0);
+    transform: translateY(calc(-50% + var(--slot-offset, 0px))) rotateX(var(--slot-tilt, 0deg)) scale(var(--slot-scale, 1));
+    transform-origin: center;
+    backface-visibility: hidden;
+    animation: none;
+    will-change: transform;
+  }
+  [data-activity-slot] .activity-rule { left: 0; width: 100%; }
+  [data-activity-slot] .activity-number { top: var(--slot-number-top, 1px); }
+}
+
+/* Article parts enter once: number -> ink-sized title covers -> copy and rule. */
+.activity-item[data-activity-item-parts] :is(h3,h4) { position: relative; isolation: isolate; }
+.activity-item[data-activity-item-parts]:not([data-activity-item-titles-ready]) :is(h3,h4) { opacity: 0; }
+.activity-item[data-activity-item-parts] :is(.activity-number,.body-copy,.activity-rule) { opacity: 0; }
+.activity-item[data-activity-item-measuring] { transform: none !important; }
+.activity-item[data-activity-item-parts] [data-activity-item-cover] { position: absolute; overflow: hidden; pointer-events: none; }
+.activity-item[data-activity-item-parts] [data-activity-item-cover]::before,
+.activity-item[data-activity-item-parts] [data-activity-item-cover]::after { content: ""; position: absolute; inset: 0; pointer-events: none; }
+.activity-item[data-activity-item-parts] [data-activity-item-cover]::before { z-index: 1; background: var(--pale-blue); }
+.activity-item[data-activity-item-parts] [data-activity-item-cover]::after { z-index: 2; background: currentColor; transform: translateX(-101%); }
+.activity-item[data-activity-item-parts="playing"] .activity-number { animation: about-copy-fade 250ms ease-out both; }
+.activity-item[data-activity-item-parts="playing"] [data-activity-item-cover]::before { animation: about-title-unmask 600ms linear var(--item-line-delay) both; }
+.activity-item[data-activity-item-parts="playing"] [data-activity-item-cover]::after { animation: about-cover-sweep 600ms cubic-bezier(.65,0,.35,1) var(--item-line-delay) both; }
+.activity-item[data-activity-item-parts="playing"] :is(.body-copy,.activity-rule) { animation: about-copy-fade 350ms ease-out var(--item-copy-delay) both; }
+@media (prefers-reduced-motion: reduce) {
+  .activity-item[data-activity-item-parts] :is(h3,h4,.activity-number,.body-copy,.activity-rule) { opacity: 1; animation: none; }
+  .activity-item[data-activity-item-parts] [data-activity-item-cover] { display: none; }
 }

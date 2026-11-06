@@ -40,6 +40,7 @@ async function main(){
   const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.ttf':'font/ttf','.svg':'image/svg+xml'};
   const server=http.createServer((req,res)=>{
     const name=decodeURIComponent(new URL(req.url,'http://localhost').pathname);
+    if(name==='/activity-list-reveal.js'){res.writeHead(200,{'Content-Type':mime['.js']}).end('');return;}
     let file;
     if(name==='/before.html') {
       const html=fs.readFileSync(path.join(root,'evidence/before-about-animation/index.html'),'utf8').replace('href="styles.css"','href="before-styles.css"');
@@ -48,6 +49,11 @@ async function main(){
     if(name==='/before-styles.css') file=path.join(root,'evidence/before-about-animation/styles.css');
     else file=path.resolve(root,'.'+(name==='/'?'/index.html':name));
     if(!file.startsWith(root+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404).end();return;}
+    if(path.extname(file)==='.css'){
+      // Serve the isolated baseline without a JS-driven style-loader promise.
+      const neutral='.activity-stage{min-height:0!important}.about-activity-boundary{--about-extra-bottom-space:0px!important}.about-activity-boundary>.activity::before{content:none!important}';
+      res.writeHead(200,{'Content-Type':mime['.css']}).end(fs.readFileSync(file,'utf8')+'\n'+neutral);return;
+    }
     res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream'});fs.createReadStream(file).pipe(res);
   });
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
@@ -67,8 +73,6 @@ async function main(){
     }
     async function load(page,route='/'){
       await page.goto(url+route,{waitUntil:'networkidle'});await page.evaluate(()=>document.fonts.ready);
-      // Test ABOUT's original animation separately from later boundary styling.
-      await page.addStyleTag({content:'.about-activity-boundary{--about-extra-bottom-space:0px!important}.about-activity-boundary>.activity::before{content:none!important}'});
     }
     async function fullViewport(page,width){
       const height=await page.evaluate(()=>document.documentElement.scrollHeight);

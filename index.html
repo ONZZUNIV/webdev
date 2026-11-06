@@ -5,22 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HOME | サークルサイト</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="connect.css">
+  <link rel="stylesheet" href="refinements.css">
   <script src="about-reveal.js" defer></script>
   <script src="section-overlap.js" defer></script>
   <script src="activity-reveal.js" defer></script>
+  <script src="activity-list-reveal.js" defer></script>
+  <script src="news-reveal.js" defer></script>
+  <script src="connect-reveal.js" defer></script>
+  <script src="activity-flow.js" defer></script>
 </head>
-<body>
+<body class="home-refined" id="top">
   <main class="home" data-figma-node="1:3">
     <div class="hero" aria-hidden="true" data-figma-node="1:9">
       <img src="assets/hero-placeholder.svg" alt="" width="1440" height="800">
     </div>
 
     <div class="about-activity-boundary">
-    <section class="about" aria-labelledby="about-title" data-figma-node="1:10">
+    <section id="about" class="about" aria-labelledby="about-title" data-figma-node="1:10">
       <div class="section-label about-label" aria-hidden="true">
         <span>About</span>
         <img src="assets/about-rule.svg" alt="" width="35" height="1">
       </div>
+      <img class="refine-about-mark" src="assets/refinement/connection-loop.svg" alt="" aria-hidden="true" width="280" height="280">
       <div class="about-copy">
         <h1 id="about-title"><span class="heading-line">一人の経験を、</span><span class="heading-line">次の誰かの一歩に。</span></h1>
         <p>これから挑戦する人、すでに活動している人、経験を伝えたい人。異なる立場の人々が出会い、知識や経験を共有することで、一人では得られない学びや機会を生み出します。その学びが、また誰かの新しい挑戦につながる。そんな交流の場を目指しています。</p>
@@ -28,8 +35,10 @@
       </div>
     </section>
 
-    <section class="activity" aria-labelledby="activity-title" data-figma-node="1:90">
+    <section id="activity" class="activity" aria-labelledby="activity-title" data-figma-node="1:90">
+      <div class="activity-stage">
       <div class="activity-layout">
+        <div class="refine-activity-surface" aria-hidden="true"></div>
         <div class="activity-heading">
           <div class="section-label activity-label" aria-hidden="true">
             <span>Activity</span>
@@ -39,6 +48,40 @@
             <h2 id="activity-title">What We Do</h2>
             <p class="activity-tagline"><span class="heading-line">交流から、</span><span class="heading-line">新しい可能性を生み出す。</span></p>
             <p class="body-copy">ビジネス・経営をテーマにした輪読会や意見交換、学外イベントへの参加を通じて、学びと交流の機会をつくります。</p>
+            <figure class="refine-activity-visual" aria-hidden="true"><svg class="refine-flow-diagram" xmlns="http://www.w3.org/2000/svg" width="480" height="140" viewBox="0 0 480 140" fill="none" aria-hidden="true">
+  <g class="flow-guide flow-guide-0" stroke="#006e96" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+    <path class="flow-base" d="M120 72H192M185 69L192 72L185 75"/>
+    <path class="flow-trace" d="M120 72H192" pathLength="1"/>
+    <path class="flow-arrival-forward" d="M185 69L192 72L185 75"/>
+    <path class="flow-arrival-backward" d="M127 69L120 72L127 75"/>
+  </g>
+  <g class="flow-guide flow-guide-1" stroke="#006e96" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+    <path class="flow-base" d="M288 72H360M353 69L360 72L353 75"/>
+    <path class="flow-trace" d="M288 72H360" pathLength="1"/>
+    <path class="flow-arrival-forward" d="M353 69L360 72L353 75"/>
+    <path class="flow-arrival-backward" d="M295 69L288 72L295 75"/>
+  </g>
+  <g class="flow-step flow-step-0" stroke="#006e96" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <circle class="flow-ring" cx="72" cy="72" r="47"/>
+    <path d="M48 54C57 50 65 51 72 56C79 51 87 50 96 54V88C87 84 79 85 72 90C65 85 57 84 48 88Z"/>
+    <path d="M72 56V90M54 63C59 61 64 62 67 64M54 71C59 69 64 70 67 72M78 64C82 62 87 61 91 63M78 72C82 70 87 69 91 71"/>
+    <circle cx="72" cy="25" r="2.5" fill="#006e96" stroke="none"/>
+  </g>
+  <g class="flow-step flow-step-1" stroke="#006e96" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <circle class="flow-ring" cx="240" cy="72" r="47"/>
+    <circle cx="229" cy="72" r="18"/>
+    <circle cx="251" cy="72" r="18"/>
+    <path d="M240 57V87" stroke-opacity=".35"/>
+    <circle cx="240" cy="25" r="2.5" fill="#006e96" stroke="none"/>
+  </g>
+  <g class="flow-step flow-step-2" stroke="#006e96" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <circle class="flow-ring" cx="408" cy="72" r="47"/>
+    <path d="M390 91L426 55M407 55H426V74"/>
+    <circle cx="390" cy="91" r="2.5" fill="#006e96" stroke="none"/>
+    <circle cx="408" cy="25" r="2.5" fill="#006e96" stroke="none"/>
+  </g>
+</svg>
+<figcaption class="refine-flow-labels"><span class="flow-label-0"><small>01</small>Learning</span><span class="flow-label-1"><small>02</small>Meet Up</span><span class="flow-label-2"><small>03</small>Try</span></figcaption></figure>
             <div class="scroll-mark" hidden aria-hidden="true" data-figma-node="1:123"><span>Scroll</span><img src="assets/scroll-arrow.svg" alt="" width="6.87963" height="47.3516"></div>
           </div>
         </div>
@@ -59,41 +102,43 @@
           </article>
         </div>
       </div>
+      </div>
     </section>
 
     </div>
 
-    <section class="news" aria-label="News" data-figma-node="1:45">
+    <section id="news" class="news" aria-label="News" data-figma-node="1:45">
       <div class="section-label news-label" aria-hidden="true"><span>News</span><img src="assets/vertical-rule.svg" alt="" width="35" height="1"></div>
       <div class="news-content">
         <img class="news-top-rule" src="assets/news-top-rule.svg" alt="" width="1102" height="2">
-        <ul class="news-list">
-          <li class="news-item"><span class="event-badge"><img src="assets/event-badge.svg" alt="" width="87" height="25"><span>EVENT</span></span><span class="news-date">XXXX/XX/XX</span><p>仮テキスト仮テキスト仮テキスト仮テキスト仮テキスト仮テキスト仮テキスト仮テキスト仮テキスト仮</p><img class="news-rule" src="assets/news-rule.svg" alt="" width="1102" height="2"></li>
-          <li class="news-item"><span class="event-badge"><img src="assets/event-badge.svg" alt="" width="87" height="25"><span>EVENT</span></span><span class="news-date">XXXX/XX/XX</span><p>仮テキスト仮テキスト仮テキスト仮テキスト仮テキスト仮テキスト仮テキスト仮テキスト仮テキスト仮</p><img class="news-rule" src="assets/news-rule.svg" alt="" width="1102" height="2"></li>
-          <li class="news-item"><span class="event-badge"><img src="assets/event-badge.svg" alt="" width="87" height="25"><span>EVENT</span></span><span class="news-date">XXXX/XX/XX</span><p>仮テキスト仮テキスト仮テキスト仮テキスト仮テキスト仮テキスト仮テキスト仮テキスト仮テキスト仮</p><img class="news-rule" src="assets/news-rule.svg" alt="" width="1102" height="2"></li>
-        </ul>
-        <a class="text-link" role="link" aria-disabled="true">View More →</a>
+        <div class="news-empty">
+          <p class="news-empty-title">現在、掲載はありません。</p>
+          <p class="body-copy">お知らせや活動記録を、順次掲載していきます。</p>
+          <img class="news-rule" src="assets/news-rule.svg" alt="" width="1102" height="2">
+        </div>
       </div>
     </section>
 
-    <section class="connect" aria-labelledby="connect-title" data-figma-node="1:69">
+    <section class="connect connect-white" id="connect" aria-labelledby="connect-title" data-figma-node="9:21">
       <p class="connect-banner"><span>CONNECT</span></p>
+      <img class="refine-connect-mark" src="assets/refinement/connection-loop.svg" alt="" aria-hidden="true" width="280" height="280">
       <h2 id="connect-title">新しい出会いを、<wbr>ここから</h2>
       <p class="connect-subtitle">参加・交流・連携について</p>
       <div class="connect-columns">
-        <article class="connect-card students" data-figma-node="1:77">
-          <h3><img class="heading-rule" src="assets/heading-rule.svg" alt="" width="28" height="1">For Students<img class="heading-rule" src="assets/heading-rule.svg" alt="" width="28" height="1"></h3>
+        <article class="connect-card students" data-figma-node="12:24">
+          <span class="connect-index" aria-hidden="true">01 /</span>
+          <h3>For Students</h3>
           <p class="body-copy">これから何かを始めたい人も、すでに活動している人も。学びや交流を通じて、仲間や新しい挑戦のきっかけを見つけませんか。</p>
-          <a class="connect-button" role="link" aria-disabled="true">JOIN US →</a>
+          <a class="connect-button" role="link" aria-disabled="true"><span>JOIN US</span><span class="connect-arrow" aria-hidden="true">↗</span></a>
         </article>
-        <div class="connect-divider" aria-hidden="true"><img src="assets/connect-divider.svg" alt="" width="246" height="1"></div>
-        <article class="connect-card partners" data-figma-node="1:83">
-          <h3><img class="heading-rule" src="assets/heading-rule.svg" alt="" width="28" height="1">For Partners<img class="heading-rule" src="assets/heading-rule.svg" alt="" width="28" height="1"></h3>
+        <article class="connect-card partners" data-figma-node="12:36">
+          <span class="connect-index" aria-hidden="true">02 /</span>
+          <h3>For Partners</h3>
           <p class="body-copy">学生との交流を通じて、知識や経験を共有しませんか。異なる視点に触れ、互いに刺激を得られる関係を目指しています。</p>
-          <a class="connect-button" role="link" aria-disabled="true"><span><strong>CONTACT</strong> →</span></a>
+          <a class="connect-button" role="link" aria-disabled="true"><span>CONTACT</span><span class="connect-arrow" aria-hidden="true">↗</span></a>
         </article>
       </div>
-      <div class="footer-placeholder" aria-hidden="true"></div>
+      <footer class="connect-footer"><a href="#top">Back to top <span aria-hidden="true">↑</span></a></footer>
     </section>
   </main>
 </body>

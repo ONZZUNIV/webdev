@@ -1,0 +1,61 @@
+/* Adopted CONNECT only. The gray hero and all other sections keep their styles. */
+.connect.connect-white {
+  --paper: #fff;
+  --heading: #303537;
+  --text: #42494b;
+  --connect-gutter: clamp(24px, 6.25vw, 144px);
+  --connect-rule: #d4dddd;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, .34fr);
+  column-gap: clamp(32px, 5vw, 96px);
+  width: 100%; margin: 0;
+  padding: clamp(80px, 9vw, 172px) var(--connect-gutter) 0;
+  border: 0; border-top: 1px solid var(--connect-rule); border-radius: 0;
+  background: var(--paper); color: var(--text);
+}
+.connect-white .connect-banner { grid-column: 1 / -1; height: auto; margin: 0; background: transparent; color: var(--blue); text-align: left; font-size: 13px; font-weight: 500; line-height: 1.5; letter-spacing: .2em; }
+.connect-white .connect-banner > span { top: 0; padding: 0; }
+.connect.connect-white > h2 { grid-column: 1; max-width: 100%; width: fit-content; margin: 32px 0 0; font-size: clamp(32px, 5.6vw, 96px); font-weight: 600; line-height: 1.35; letter-spacing: -.025em; text-align: left; word-break: keep-all; text-wrap: wrap; }
+.connect-white .connect-subtitle { grid-column: 2; align-self: end; margin: 0 0 .65em; font-size: clamp(13px, 1.111111vw, 18px); line-height: 1.8; text-align: left; color: #657174; }
+.connect-white .connect-subtitle::before { content: ""; display: block; width: 32px; height: 1px; margin-bottom: 20px; background: var(--blue); }
+.connect-white .connect-columns { grid-column: 1 / -1; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0; margin: clamp(48px, 5.5vw, 104px) 0 0; border-block: 1px solid var(--connect-rule); }
+.connect-white .connect-card { grid-template-rows: auto auto 1fr auto; justify-items: stretch; padding: clamp(28px, 3vw, 56px) clamp(28px, 4vw, 72px) clamp(28px, 3vw, 56px) 0; }
+.connect-white .partners { grid-column: 2; grid-row: 1; padding-left: clamp(28px, 4vw, 72px); padding-right: 0; border-left: 1px solid var(--connect-rule); }
+.connect-white .connect-index { display: block; margin-bottom: 28px; color: var(--blue); font-family: "Alatsi",sans-serif; font-size: 12px; letter-spacing: .14em; }
+.connect-white .connect-card h3 { width: auto; margin: 0; font-size: clamp(26px, 2.5vw, 46px); font-weight: 500; line-height: 1.25; letter-spacing: -.025em; }
+.connect-white .connect-card > .body-copy { width: 100%; max-width: 31em; margin-top: 24px; line-height: 1.95; }
+.connect-white .connect-button { justify-content: space-between; width: 100%; min-height: 64px; margin: clamp(28px, 3.5vw, 64px) 0 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--heading); font-size: 13px; font-weight: 600; line-height: 1.5; letter-spacing: .13em; }
+.connect-white .connect-arrow { display: grid; place-items: center; flex: none; width: 52px; height: 52px; border: 1px solid var(--blue); border-radius: 50%; color: var(--blue); font-family: "Alan Sans",sans-serif; font-size: 26px; font-weight: 300; line-height: 1; letter-spacing: 0; }
+.connect-footer { grid-column: 1 / -1; display: flex; justify-content: flex-end; padding-block: 32px; font-size: 12px; color: #657174; }
+.connect-footer a { display: inline-flex; align-items: center; gap: 16px; min-height: 44px; }
+.connect-footer a:hover { color: var(--blue); }
+.connect-white a:focus-visible { outline: 2px solid var(--blue); outline-offset: 6px; }
+.connect-white[data-connect-reveal] [data-connect-cover-line]::before { background: var(--paper); }
+.connect-white .connect-card[data-connect-card-reveal] > .connect-index { opacity: 0; }
+.connect-white .connect-card[data-connect-card-reveal="playing"] > .connect-index { animation: about-copy-fade 350ms ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .connect-white .connect-card[data-connect-card-reveal] > .connect-index { opacity: 1; animation: none; }
+}
+@media (max-width: 1099.98px) {
+  .connect.connect-white { grid-template-columns: minmax(0,1fr); }
+  .connect-white .connect-subtitle { grid-column: 1; margin-top: 24px; margin-bottom: 0; }
+  .connect-white .connect-subtitle::before { display: none; }
+  .connect.connect-white > h2 { max-width: 13em; }
+}
+@media (max-width: 999.98px) {
+  .connect-white .connect-columns { grid-template-columns: minmax(0,1fr); }
+  .connect-white .connect-card { padding: 32px 0; }
+  .connect-white .partners { grid-column: 1; grid-row: auto; border-left: 0; border-top: 1px solid var(--connect-rule); }
+  .connect-white .connect-index { margin-bottom: 20px; }
+  .connect-white .connect-card > .body-copy { max-width: 36em; }
+}
+@media (max-width: 799.98px) {
+  .connect.connect-white { padding-top: 64px; }
+  .connect.connect-white > h2 { margin-top: 24px; font-size: clamp(32px, 6.5vw, 50px); line-height: 1.45; }
+  .connect-white .connect-columns { margin-top: 40px; }
+  .connect-white .connect-card h3 { font-size: 30px; }
+  .connect-white .connect-button { margin-top: 28px; }
+  .connect-white .connect-arrow { width: 48px; height: 48px; }
+  .connect-footer { padding-block: 20px; font-size: 11px; }
+  .connect-footer a { gap: 8px; }
+}
