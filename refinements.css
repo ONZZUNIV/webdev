@@ -7,6 +7,27 @@
 .home-refined .about-copy h1 > .heading-line:nth-child(2) { color: var(--blue); }
 .home-refined .about[data-about-reveal] [data-about-title-line]:last-child { color: var(--blue); }
 .home-refined .about .text-link { padding-bottom: 6px; border-bottom: 1px solid var(--refine-line); }
+/* Link feedback only. Destinations remain unwired until their URLs are supplied. */
+.home-refined .about .text-link { position: relative; }
+.home-refined .about .text-link::after { content: ""; position: absolute; inset: auto 0 -1px; height: 1px; background: var(--blue); transform: scaleX(0); transform-origin: left; }
+.learn-arrow { display: inline-block; }
+.home-refined .about .text-link:focus-visible { color: var(--blue); }
+.home-refined .about .text-link:focus-visible::after { transform: scaleX(1); }
+.home-refined .about .text-link:focus-visible .learn-arrow { transform: translateX(3px); }
+.home-refined .connect-button:focus-visible { color: var(--blue); }
+.home-refined .connect-button:focus-visible .connect-arrow { background: var(--blue); color: #fff; transform: translate(2px,-2px); }
+@media (hover: hover) and (pointer: fine) {
+  .home-refined .about .text-link:hover { color: var(--blue); }
+  .home-refined .about .text-link:hover::after { transform: scaleX(1); }
+  .home-refined .about .text-link:hover .learn-arrow { transform: translateX(3px); }
+  .home-refined .connect-button:hover { color: var(--blue); }
+  .home-refined .connect-button:hover .connect-arrow { background: var(--blue); color: #fff; transform: translate(2px,-2px); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .home-refined .about .text-link, .home-refined .connect-button { transition: color 220ms ease-out; }
+  .home-refined .about .text-link::after, .learn-arrow { transition: transform 220ms ease-out; }
+  .home-refined .connect-arrow { transition: background-color 220ms ease-out, color 220ms ease-out, transform 220ms ease-out; }
+}
 
 /* A drawing explains the relationship between the three activities. */
 .home-refined .activity-layout { position: relative; isolation: isolate; }
