@@ -5,3 +5,33 @@ node_modules/
 .DS_Store
 
 evidence/
+
+# Local development and design references
+/README.md
+/assets/connect-divider.svg
+/assets/event-badge.svg
+/assets/heading-rule.svg
+/assets/refinement/activity-flow.svg
+/design-study.css
+/design-study.html
+/design-study.md
+/refinement-flow.js
+/refinement-study.css
+/refinement-study.html
+/refinement-study.md
+/tools/preview-design-study.cjs
+/tools/verify-about.cjs
+/tools/verify-activity-list.cjs
+/tools/verify-activity-slot.cjs
+/tools/verify-activity-sticky.cjs
+/tools/verify-activity.cjs
+/tools/verify-connect-adoption.cjs
+/tools/verify-connect.cjs
+/tools/verify-design-study.cjs
+/tools/verify-downstream-entry.cjs
+/tools/verify-news.cjs
+/tools/verify-refinement-adoption.cjs
+/tools/verify-refinement-flow.cjs
+/tools/verify-refinement-study.cjs
+/tools/verify-section-overlap.cjs
+/tools/verify.cjs
