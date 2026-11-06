@@ -17,7 +17,7 @@
 .refine-activity-visual { width: min(100%,440px); margin: 32px 0 0; pointer-events: none; }
 @media (prefers-reduced-motion: no-preference) {
   .refine-activity-visual { transition: opacity 400ms ease-out; }
-  .activity-heading[data-activity-reveal] .refine-activity-visual { opacity: 0; }
+  .activity-heading[data-activity-reveal="pending"] .refine-activity-visual { opacity: 0; }
 }
 .refine-activity-visual[data-flow-fit] { width: min(100%,var(--flow-fit-width)); margin-top: 16px; }
 .refine-activity-visual[data-flow-hidden] { display: none; }
