@@ -15,6 +15,10 @@
 .refine-activity-surface::before, .refine-activity-surface::after { content: ""; position: absolute; width: clamp(280px,35vw,680px); aspect-ratio: 1; right: -12%; bottom: -38%; border: 1px solid rgba(0,110,150,.13); border-radius: 50%; }
 .refine-activity-surface::after { width: clamp(220px,29vw,560px); right: -9%; bottom: -31%; border-color: rgba(0,110,150,.075); }
 .refine-activity-visual { width: min(100%,440px); margin: 32px 0 0; pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .refine-activity-visual { transition: opacity 400ms ease-out; }
+  .activity-heading[data-activity-reveal] .refine-activity-visual { opacity: 0; }
+}
 .refine-activity-visual[data-flow-fit] { width: min(100%,var(--flow-fit-width)); margin-top: 16px; }
 .refine-activity-visual[data-flow-hidden] { display: none; }
 .refine-flow-diagram { display: block; width: 100%; height: auto; overflow: visible; }
@@ -26,30 +30,30 @@
 .refine-flow-labels { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; margin-top: 4px; font-size: 11px; color: #637d85; }
 .refine-flow-labels > span { display: flex; align-items: baseline; justify-content: center; gap: 8px; white-space: nowrap; }
 .refine-flow-labels small { font-family: "Alatsi",sans-serif; font-size: 10px; letter-spacing: .08em; }
-[data-activity-slot] .refine-flow-diagram .flow-step { opacity: .28; }
-[data-activity-slot] .refine-flow-labels > span { opacity: .45; }
-[data-activity-slot-index="0"] .refine-flow-diagram .flow-step-0,
-[data-activity-slot-index="1"] .refine-flow-diagram .flow-step-1,
-[data-activity-slot-index="2"] .refine-flow-diagram .flow-step-2 { opacity: 1; }
-[data-activity-slot-index="0"] .refine-flow-diagram .flow-step-0 .flow-ring,
-[data-activity-slot-index="1"] .refine-flow-diagram .flow-step-1 .flow-ring,
-[data-activity-slot-index="2"] .refine-flow-diagram .flow-step-2 .flow-ring { fill: rgba(255,255,255,.64); stroke-opacity: .8; }
-[data-activity-slot-index="0"] .refine-flow-labels > .flow-label-0,
-[data-activity-slot-index="1"] .refine-flow-labels > .flow-label-1,
-[data-activity-slot-index="2"] .refine-flow-labels > .flow-label-2 { color: var(--blue); opacity: 1; }
+[data-activity-slot-visible] .refine-flow-diagram .flow-step { opacity: .28; }
+[data-activity-slot-visible] .refine-flow-labels > span { opacity: .45; }
+[data-activity-slot-visible][data-activity-slot-index="0"] .refine-flow-diagram .flow-step-0,
+[data-activity-slot-visible][data-activity-slot-index="1"] .refine-flow-diagram .flow-step-1,
+[data-activity-slot-visible][data-activity-slot-index="2"] .refine-flow-diagram .flow-step-2 { opacity: 1; }
+[data-activity-slot-visible][data-activity-slot-index="0"] .refine-flow-diagram .flow-step-0 .flow-ring,
+[data-activity-slot-visible][data-activity-slot-index="1"] .refine-flow-diagram .flow-step-1 .flow-ring,
+[data-activity-slot-visible][data-activity-slot-index="2"] .refine-flow-diagram .flow-step-2 .flow-ring { fill: rgba(255,255,255,.64); stroke-opacity: .8; }
+[data-activity-slot-visible][data-activity-slot-index="0"] .refine-flow-labels > .flow-label-0,
+[data-activity-slot-visible][data-activity-slot-index="1"] .refine-flow-labels > .flow-label-1,
+[data-activity-slot-visible][data-activity-slot-index="2"] .refine-flow-labels > .flow-label-2 { color: var(--blue); opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
-  [data-activity-slot] .refine-flow-diagram .flow-step { transition: opacity 420ms ease-out; }
-  [data-activity-slot] .refine-flow-diagram .flow-ring { transition: fill 420ms ease-out, stroke-opacity 420ms ease-out; }
-  [data-activity-slot] .refine-flow-labels > span { transition: color 360ms ease-out, opacity 360ms ease-out; }
-  [data-activity-slot-index="0"] .refine-flow-diagram .flow-step-0,
-  [data-activity-slot-index="1"] .refine-flow-diagram .flow-step-1,
-  [data-activity-slot-index="2"] .refine-flow-diagram .flow-step-2,
-  [data-activity-slot-index="0"] .refine-flow-diagram .flow-step-0 .flow-ring,
-  [data-activity-slot-index="1"] .refine-flow-diagram .flow-step-1 .flow-ring,
-  [data-activity-slot-index="2"] .refine-flow-diagram .flow-step-2 .flow-ring,
-  [data-activity-slot-index="0"] .refine-flow-labels > .flow-label-0,
-  [data-activity-slot-index="1"] .refine-flow-labels > .flow-label-1,
-  [data-activity-slot-index="2"] .refine-flow-labels > .flow-label-2 { transition-delay: 80ms; }
+  [data-activity-slot-visible] .refine-flow-diagram .flow-step { transition: opacity 420ms ease-out; }
+  [data-activity-slot-visible] .refine-flow-diagram .flow-ring { transition: fill 420ms ease-out, stroke-opacity 420ms ease-out; }
+  [data-activity-slot-visible] .refine-flow-labels > span { transition: color 360ms ease-out, opacity 360ms ease-out; }
+  [data-activity-slot-visible][data-activity-slot-index="0"] .refine-flow-diagram .flow-step-0,
+  [data-activity-slot-visible][data-activity-slot-index="1"] .refine-flow-diagram .flow-step-1,
+  [data-activity-slot-visible][data-activity-slot-index="2"] .refine-flow-diagram .flow-step-2,
+  [data-activity-slot-visible][data-activity-slot-index="0"] .refine-flow-diagram .flow-step-0 .flow-ring,
+  [data-activity-slot-visible][data-activity-slot-index="1"] .refine-flow-diagram .flow-step-1 .flow-ring,
+  [data-activity-slot-visible][data-activity-slot-index="2"] .refine-flow-diagram .flow-step-2 .flow-ring,
+  [data-activity-slot-visible][data-activity-slot-index="0"] .refine-flow-labels > .flow-label-0,
+  [data-activity-slot-visible][data-activity-slot-index="1"] .refine-flow-labels > .flow-label-1,
+  [data-activity-slot-visible][data-activity-slot-index="2"] .refine-flow-labels > .flow-label-2 { transition-delay: 80ms; }
 }
 @media (prefers-reduced-motion: reduce) {
   .refine-flow-diagram :is(.flow-trace,.flow-arrival-forward,.flow-arrival-backward) { opacity: 0 !important; }
