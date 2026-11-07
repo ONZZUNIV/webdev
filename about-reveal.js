@@ -1,7 +1,7 @@
 // 段階的な機能追加。準備に成功するまでは、すべての内容を表示する。
 (() => {
   const about = document.querySelector('.about');
-  const title = about?.querySelector('h1');
+  const title = about?.querySelector('#about-title');
   const link = about?.querySelector('.text-link');
   if (!about || !title || !link || !('IntersectionObserver' in window) ||
       typeof window.matchMedia !== 'function') return;

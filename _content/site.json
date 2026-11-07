@@ -1,0 +1,35 @@
+{
+  "baseUrl": "https://onzzuniv.github.io/webdev/",
+  "name": "",
+  "shareImage": {
+    "src": "assets/social/share.jpg",
+    "alt": "ビジネスを学び、仲間と試す。東京理科大学の学生を中心としたサークル"
+  },
+  "pages": {
+    "index.html": {
+      "path": "",
+      "title": "起業・経営・ビジネスを学ぶ学生サークル",
+      "description": "東京理科大学の学生を中心としたサークルです。起業・経営・ビジネスをテーマに、輪読会や意見交換、学生や社会人との交流を通じて、学びを小さな企画や実践につなげることを目指しています。"
+    },
+    "about.html": {
+      "path": "about.html",
+      "title": "サークルについて（About）",
+      "description": "ビジネスや経営に関心を持つ人が、知識や試行錯誤を共有する場を目指しています。設立の背景、大切にしている考え方、サークルの概要を紹介します。"
+    },
+    "activity.html": {
+      "path": "activity.html",
+      "title": "活動内容（Activity）",
+      "description": "勉強会や輪読会での学び、学生や社会人との交流、ピッチや共同企画への挑戦。Learning・Meet Up・Tryの3つの軸から、サークルが目指す活動を紹介します。"
+    },
+    "news.html": {
+      "path": "news.html",
+      "title": "お知らせ・活動記録（News）",
+      "description": "サークルのイベント案内、勉強会や交流会などの活動記録、noteの記事をまとめています。カテゴリ別にお知らせを探せます。"
+    },
+    "connect/index.html": {
+      "path": "connect/",
+      "title": "参加・交流・連携のお問い合わせ（Connect）",
+      "description": "サークルへの参加・見学を検討する学生や、交流・連携を希望する社会人・企業・団体の方に向けた窓口です。相談の種類と受付状況を確認できます。"
+    }
+  }
+}

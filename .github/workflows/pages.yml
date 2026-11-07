@@ -35,6 +35,7 @@ jobs:
           mkdir _site
           git ls-files -z -- ':(top,glob)*.html' ':(top,glob)*.css' ':(top,glob)*.js' 'assets/' 'connect/' ':!:assets/news/.gitkeep' |
             xargs -0 cp --parents --target-directory=_site --
+          cp sitemap.xml _site/
           if [ -d news ]; then cp -r news _site/; fi
       - uses: actions/upload-pages-artifact@v4
         with:

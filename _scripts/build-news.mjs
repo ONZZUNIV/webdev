@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import MarkdownIt from 'markdown-it';
 import { categories, eventStatuses, registrationStatuses, readPublishedNews } from './news-data.mjs';
+import { applyPageMetadata, html, pageMetadata, pages, sitemap, siteName } from './site-seo.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const generated = '<!-- NEWS 自動生成ファイル。変更は _content/news の原稿に行う。 -->';
@@ -10,7 +11,6 @@ const start = '        <!-- NEWS 自動生成開始 -->';
 const end = '        <!-- NEWS 自動生成終了 -->';
 const timeZone = 'Asia/Tokyo';
 const dateFormat = new Intl.DateTimeFormat('ja-JP', { timeZone, dateStyle: 'long', timeStyle: 'short' });
-const html = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 const date = value => `<time datetime="${html(value)}">${html(value.replaceAll('-', '.'))}</time>`;
 const dateTime = value => `<time datetime="${html(value)}">${dateFormat.format(new Date(value))}</time>`;
 const badge = category => `<span class="news-category news-category--${category}">${category.toUpperCase()}</span>`;
@@ -30,7 +30,8 @@ function paragraphs(value) {
 }
 
 function photo(image, prefix = '') {
-  return `<img src="${prefix}${html(image.src)}" alt="${html(image.alt)}" loading="lazy" decoding="async">`;
+  const size = image.width && image.height ? ` width="${image.width}" height="${image.height}"` : '';
+  return `<img src="${prefix}${html(image.src)}" alt="${html(image.alt)}"${size} loading="lazy" decoding="async">`;
 }
 
 function destination(item) {
@@ -55,7 +56,7 @@ function homeNews(items) {
   return `${start}\n${content}\n        <a class="text-link news-more" href="news.html" aria-label="NEWS一覧を見る">View More <span aria-hidden="true">→</span></a>\n${end}`;
 }
 
-function page({ title, description, main, prefix = '', isArchive = false }) {
+function page({ metadata, main, prefix = '', isArchive = false }) {
   const newsLink = `<a href="${prefix}news.html"${isArchive ? ' aria-current="page"' : ''}>News</a>`;
   return `<!doctype html>
 ${generated}
@@ -63,8 +64,7 @@ ${generated}
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${html(title)} | サークルサイト</title>
-  <meta name="description" content="${html(description)}">
+${pageMetadata(metadata)}
   <link rel="stylesheet" href="${prefix}styles.css">
   <link rel="stylesheet" href="${prefix}details.css">
   <link rel="stylesheet" href="${prefix}site.css">
@@ -73,7 +73,7 @@ ${isArchive ? '  <script src="news-filter.js" defer></script>\n' : ''}</head>
 <body class="detail-page news-page" id="top">
 <a class="site-skip" href="#main">本文へ移動</a>
 <header class="site-header">
-  <a class="site-home" href="${prefix}index.html">HOME</a>
+  <a class="site-home" href="${prefix || './'}">HOME</a>
   <nav class="site-nav" aria-label="メインナビゲーション"><a href="${prefix}about.html">About</a><a href="${prefix}activity.html">Activity</a>${newsLink}<a href="${prefix}connect/">Connect</a></nav>
 </header>
 <main id="main">
@@ -83,7 +83,7 @@ ${main}
   <div class="footer-groups">
     <section aria-labelledby="footer-pages">
       <h2 class="footer-label" id="footer-pages">ページ案内</h2>
-      <nav aria-labelledby="footer-pages"><a href="${prefix}index.html">HOME</a><a href="${prefix}about.html">About</a><a href="${prefix}activity.html">Activity</a>${newsLink}<a href="${prefix}connect/">Connect</a></nav>
+      <nav aria-labelledby="footer-pages"><a href="${prefix || './'}">HOME</a><a href="${prefix}about.html">About</a><a href="${prefix}activity.html">Activity</a>${newsLink}<a href="${prefix}connect/">Connect</a></nav>
     </section>
     <section aria-labelledby="footer-media">
       <h2 class="footer-label" id="footer-media">SNS・note</h2>
@@ -96,7 +96,7 @@ ${main}
     </section>
   </div>
   <div class="footer-meta">
-    <p>© 2026 ［団体名］</p>
+    <p>© 2026 <span data-site-name="［団体名］">${html(siteName || '［団体名］')}</span></p>
     <a href="#top">ページ上部へ <span aria-hidden="true">↑</span></a>
   </div>
 </footer>
@@ -112,7 +112,7 @@ function archive(items) {
       <div class="news-entry-meta">${badge(item.category)}<span class="news-publication">公開日 ${date(item.publishedOn)}</span>${item.category === 'blog' && item.blog.notePublishedOn !== item.publishedOn ? `<span class="news-publication">note公開日 ${date(item.blog.notePublishedOn)}</span>` : ''}</div>
       <div class="news-entry-copy"><h2>${titleLink(item)}</h2><p>${html(item.summary)}</p></div>${item.thumbnail ? `\n      <div class="news-entry-image">${photo(item.thumbnail)}</div>` : ''}
     </li>`);
-  return page({ title: 'News', description, isArchive: true, main: `<section class="news-hero" aria-labelledby="news-title">
+  return page({ metadata: pages['news.html'], isArchive: true, main: `<section class="news-hero" aria-labelledby="news-title">
   <p class="detail-eyebrow">NEWS / UPDATES</p>
   <h1 id="news-title">News</h1>
   <p>${description}</p>
@@ -152,9 +152,17 @@ function eventBody(event) {
     <section class="news-article-section"><h2>イベント概要</h2>${paragraphs(event.description)}${registration}</section>`;
 }
 
-function detail(item) {
-  const body = item.category === 'report' ? reportBody(item.report) : eventBody(item.event);
-  return page({ title: item.title, description: item.summary, prefix: '../', main: `<article class="news-article">
+function detail(item, path) {
+  const isReport = item.category === 'report';
+  const body = isReport ? reportBody(item.report) : eventBody(item.event);
+  const metadata = {
+    path,
+    title: `${item.title}｜${isReport ? '活動記録' : 'イベント'}`,
+    description: item.summary,
+    type: 'article',
+    image: item.thumbnail,
+  };
+  return page({ metadata, prefix: '../', main: `<article class="news-article">
   <nav class="news-article-nav" aria-label="現在の位置"><a href="../news.html">News一覧</a><span aria-hidden="true">/</span><span>${item.category.toUpperCase()}</span></nav>
   <header class="news-article-header">
     <div class="news-entry-meta">${badge(item.category)}<span class="news-publication">公開日 ${date(item.publishedOn)}</span>${item.updatedOn ? `<span class="news-publication">更新日 ${date(item.updatedOn)}</span>` : ''}</div>
@@ -179,11 +187,21 @@ async function build() {
     throw new Error('index.html のNEWS生成範囲を確認してください。');
   }
   const eol = home.includes('\r\n') ? '\r\n' : '\n';
-  const outputs = new Map([
-    ['index.html', home.slice(0, begin) + homeNews(items).replaceAll('\n', eol) + home.slice(finish + end.length)],
-    ['news.html', archive(items)],
-  ]);
-  for (const item of items) if (!destination(item).label) outputs.set(`news/${item.slug}.html`, detail(item));
+  const updatedHome = home.slice(0, begin) + homeNews(items).replaceAll('\n', eol) + home.slice(finish + end.length);
+  const outputs = new Map([['index.html', applyPageMetadata(updatedHome, 'index.html')]]);
+  for (const file of Object.keys(pages)) {
+    if (file === 'index.html' || file === 'news.html') continue;
+    outputs.set(file, applyPageMetadata(await readFile(join(root, file), 'utf8'), file));
+  }
+  outputs.set('news.html', archive(items));
+  const articlePaths = [];
+  for (const item of items) {
+    const target = destination(item);
+    if (target.label) continue;
+    articlePaths.push(target.url);
+    outputs.set(target.url, detail(item, target.url));
+  }
+  outputs.set('sitemap.xml', sitemap(articlePaths));
 
   const directory = join(root, 'news');
   const files = await readdir(directory, { withFileTypes: true }).catch(error => {

@@ -5,7 +5,7 @@
   const title = heading?.querySelector('.activity-intro > h2');
   const caption = heading?.querySelector('.activity-tagline');
   const body = heading?.querySelector('.activity-intro > .body-copy');
-  const aboutText = [...document.querySelectorAll('.about-copy > h1, .about-copy > p')];
+  const aboutText = [...document.querySelectorAll('.about-copy > #about-title, .about-copy > p')];
   if (!section || !heading || !title || !caption || !body || !('IntersectionObserver' in window) ||
       typeof window.matchMedia !== 'function') return;
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');

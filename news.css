@@ -33,7 +33,7 @@
 .news-publication { color: #536468; font-size: 13px; line-height: 1.6; }
 .news-entry-copy h2 { font-size: clamp(20px,2vw,32px); font-weight: 600; line-height: 1.6; overflow-wrap: anywhere; }
 .news-entry-copy p { margin-top: 8px; max-width: 42em; }
-.news-entry-image img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.news-entry-image img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
 .news-archive-empty { padding-block: clamp(40px,5vw,84px); border-bottom: 1px solid var(--detail-line); }
 .news-archive-empty > p + p { margin-top: 12px; }
 .news-article { padding: clamp(40px,6vw,96px) var(--detail-gutter) clamp(64px,8vw,128px); }

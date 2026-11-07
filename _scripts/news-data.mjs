@@ -1,5 +1,6 @@
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join } from 'node:path';
+import { imageSizeFromFile } from 'image-size/fromFile';
 
 export const categories = ['event', 'report', 'blog'];
 export const eventStatuses = { scheduled: '開催予定', postponed: '延期', cancelled: '中止', completed: '開催終了' };
@@ -42,6 +43,11 @@ async function image(root, value, field) {
   if (value.caption !== undefined) requiredText(value.caption, `${field}.caption`);
   const info = await stat(join(root, value.src)).catch(() => null);
   if (!info?.isFile()) throw new Error(`画像が見つかりません。 ${value.src}`);
+  const dimensions = await imageSizeFromFile(join(root, value.src)).catch(() => null);
+  const rotated = dimensions?.orientation >= 5 && dimensions.orientation <= 8;
+  value.width = rotated ? dimensions.height : dimensions?.width;
+  value.height = rotated ? dimensions.width : dimensions?.height;
+  value.bytes = info.size;
 }
 
 async function validatePublished(root, item) {

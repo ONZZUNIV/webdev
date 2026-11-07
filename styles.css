@@ -53,7 +53,7 @@ a { color: inherit; text-decoration: none; }
 }
 .about-label > img { left: calc(var(--label-width) * .444444); top: 3.321429em; }
 .about-copy { max-width: 36em; }
-.about-copy h1 { max-width: min(100%, 29.791667vw); font-size: var(--heading-size); font-weight: 700; line-height: 1.305556; letter-spacing: .1em; }
+.about-copy :is(h1,h2) { max-width: min(100%, 29.791667vw); font-size: var(--heading-size); font-weight: 700; line-height: 1.305556; letter-spacing: .1em; }
 .about-copy > p { margin-top: var(--space-32); }
 /* 1440pxでは本文の自動高さが1px増えるため、リンク前の余白で補正する。 */
 .about-copy .text-link { margin-top: 1.5em; }
@@ -171,7 +171,7 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 1099.98px) {
   .about { grid-template-columns: var(--label-width) minmax(0, 1fr); column-gap: 5vw; padding: 10vw 14vw 11vw; }
   .about-copy { max-width: 38em; }
-  .about-copy h1 { max-width: 100%; }
+  .about-copy :is(h1,h2) { max-width: 100%; }
   .about .heading-line { display: inline; }
 }
 
@@ -222,7 +222,7 @@ a { color: inherit; text-decoration: none; }
 
   .about { grid-template-columns: minmax(0, 1fr); gap: 20px; padding: var(--mobile-section-space) var(--mobile-gutter); }
   .about-copy { width: 100%; max-width: 38em; }
-  .about-copy h1 { max-width: 100%; }
+  .about-copy :is(h1,h2) { max-width: 100%; }
   .text-link { display: flex; align-items: center; justify-content: flex-end; min-height: 44px; }
 
   .activity { padding-block: var(--mobile-section-space); }
@@ -267,11 +267,11 @@ a { color: inherit; text-decoration: none; }
   .about[data-about-reveal] .about-label > * { --about-label-clip-start: inset(0 100% 0 0); }
 }
 
-.about[data-about-reveal] .about-copy > h1 {
+.about[data-about-reveal] .about-copy > :is(h1,h2) {
   position: relative;
   isolation: isolate;
 }
-.about[data-about-reveal]:not([data-about-title-ready]) .about-copy > h1 > .heading-line { opacity: 0; }
+.about[data-about-reveal]:not([data-about-title-ready]) .about-copy > :is(h1,h2) > .heading-line { opacity: 0; }
 .about[data-about-reveal] [data-about-title-line] {
   position: absolute;
   overflow: hidden;
@@ -368,7 +368,7 @@ a { color: inherit; text-decoration: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .about[data-about-reveal] .about-label > * { clip-path: none; animation: none; }
-  .about[data-about-reveal]:not([data-about-title-ready]) .about-copy > h1 > .heading-line { opacity: 1; }
+  .about[data-about-reveal]:not([data-about-title-ready]) .about-copy > :is(h1,h2) > .heading-line { opacity: 1; }
   .about[data-about-reveal] [data-about-title-line]::before,
   .about[data-about-reveal] [data-about-title-line]::after { content: none; animation: none; }
   .about[data-about-reveal] .about-copy > p,
