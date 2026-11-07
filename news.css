@@ -40,6 +40,7 @@
 .news-article-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; font-size: 13px; color: var(--blue); }
 .news-article-nav a { display: inline-flex; align-items: center; min-height: 44px; }
 .news-article-header { padding-block: clamp(32px,4vw,64px); border-bottom: 1px solid var(--detail-line); }
+.news-article-header:has(+ .news-article-body > .news-article-facts:first-child) { padding-block-end: 0; border-bottom: 0; }
 .news-article-header .news-entry-meta { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
 .news-article-header h1 { margin: 24px 0 16px; font-size: clamp(30px,4vw,64px); font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
 .news-article-summary,.news-article-body { max-width: 46em; }
