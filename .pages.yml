@@ -72,7 +72,11 @@ content:
         type: date
         default: ""
         description: 必要なときだけ記入してください。新着順には影響しません。
-      - &thumbnail {name: thumbnail, label: サムネイル, component: image}
+      - &thumbnail
+        name: thumbnail
+        label: サムネイル（任意）
+        component: image
+        description: 画像を掲載しない場合は、この欄をすべて空欄にしてください。画像と代替テキストの必須表示は、サムネイルを掲載する場合に適用されます。
       - name: event
         label: 開催情報
         type: object
@@ -110,11 +114,16 @@ content:
                 - {name: open, label: 受付中}
                 - {name: closed, label: 受付終了}
                 - {name: not-required, label: 申込不要}
-          - {name: registrationUrl, label: 参加申込URL, type: string, pattern: &https '^https://[^\s]+$'}
-          - name: detailUrl
-            label: 外部イベント案内URL
+          - name: registrationUrl
+            label: 参加申込URL（任意）
             type: string
-            pattern: *https
+            pattern: &optionalHttps
+              regex: '^(?:https://[^\s]+)?$'
+              message: URLを入力する場合は、https:// から始めてください。
+          - name: detailUrl
+            label: 外部イベント案内URL（任意）
+            type: string
+            pattern: *optionalHttps
             description: 入力するとNEWSから外部案内へ直接移動します。空欄の場合はサイト内の詳細を表示します。
           - name: source
             label: 外部システムとの紐付け
@@ -156,17 +165,17 @@ content:
             options: {format: markdown, media: false}
           - {name: notes, label: 活動メモ, type: text}
           - name: photos
-            label: 活動写真
+            label: 活動写真（任意）
             component: image
             list: true
-            description: 公開できる写真を選び、1枚ずつ代替テキストを記入してください。
+            description: 写真がない場合は行の追加は不要です。掲載する場合は、写真ごとに代替テキストを記入してください。
           - name: links
             label: 関連リンク
             type: object
             list: true
             fields:
               - {name: label, label: リンク名, type: string, required: true}
-              - {name: url, label: URL, type: string, required: true, pattern: *https}
+              - {name: url, label: URL, type: string, required: true, pattern: '^https://[^\s]+$'}
 
   - name: blog
     label: BLOG｜note記事
