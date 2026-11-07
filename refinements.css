@@ -109,3 +109,34 @@
   .refine-activity-surface::before, .refine-activity-surface::after { display: none; }
 
 }
+
+/* HOMEの冒頭で、団体の対象と活動内容を伝える。 */
+.home-hero {
+  display: grid;
+  grid-template-columns: minmax(0,1.25fr) minmax(0,1fr);
+  align-items: end;
+  gap: clamp(28px,6vw,96px);
+  padding: clamp(64px,9vw,150px) var(--site-gutter);
+  border-bottom: 1px solid var(--site-line);
+}
+.home-hero-label { color: var(--blue); font-size: 14px; font-weight: 500; line-height: 1.8; }
+.home-hero-label::after { content: ""; display: block; width: 36px; height: 1px; margin-top: 18px; background: currentColor; }
+.home-hero-title { margin-top: 28px; color: var(--heading); font-size: clamp(30px,5vw,84px); font-weight: 600; line-height: 1.42; letter-spacing: .02em; }
+.home-hero-title span { color: var(--blue); }
+.home-hero-copy { max-width: 28em; }
+.home-hero-copy p { line-height: 1.95; }
+.home-hero-link { display: inline-flex; align-items: center; gap: 20px; min-height: 44px; margin-top: 24px; border-bottom: 1px solid var(--site-line); color: var(--blue); font-weight: 600; }
+.home-hero-link:hover { border-bottom-color: var(--blue); }
+.home-refined .connect-button { letter-spacing: .04em; }
+.home-refined .connect-subtitle { line-height: 1.8; }
+/* 最初の項目は番号と見出しを先に見せ、説明文だけを短くフェードさせる。 */
+@media (prefers-reduced-motion: no-preference) {
+  .home-refined [data-activity-slot-starting] .activity-item:first-child :is(h3,h4,.activity-number) { opacity: 1; animation: none; }
+  .home-refined [data-activity-slot-starting] .activity-item:first-child [data-activity-item-cover] { display: none; }
+  .home-refined [data-activity-slot-starting] .activity-item:first-child[data-activity-item-parts="playing"] :is(.body-copy,.activity-rule) { animation-delay: 120ms; }
+}
+@media (max-width: 799.98px) {
+  .home-hero { grid-template-columns: 1fr; gap: 24px; padding-block: 56px; }
+  .home-hero-title { font-size: clamp(30px,7.8vw,56px); }
+  .home-hero-label { font-size: 13px; }
+}

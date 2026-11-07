@@ -212,7 +212,8 @@ const articleReveal = (() => {
     const start = startPosition();
     const step = parseFloat(stage.style.getPropertyValue('--activity-slot-step'));
     const dwell = parseFloat(stage.style.getPropertyValue('--activity-slot-dwell'));
-    if (!entered && (titleShown||!heading.hasAttribute('data-activity-reveal')) && scrollY >= start) {
+    // 青幕が固定された位置でも、左見出しが出たら最初の項目を表示する。
+    if (!entered && (titleShown||!heading.hasAttribute('data-activity-reveal')) && (pinned() || scrollY >= start)) {
       entered = true;
       // 一度に通過したセクションへ閲覧位置を引き戻さない。
       if (pinned()) {

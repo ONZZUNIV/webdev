@@ -24,9 +24,16 @@
   <nav class="site-nav" aria-label="メインナビゲーション"><a href="about.html">About</a><a href="activity.html">Activity</a><a href="connect/">Connect</a></nav>
 </header>
   <main id="main" class="home" data-figma-node="1:3">
-    <div class="hero" aria-hidden="true" data-figma-node="1:9">
-      <img src="assets/hero-placeholder.svg" alt="" width="1440" height="800">
-    </div>
+    <section class="home-hero" aria-labelledby="home-hero-title">
+      <div class="home-hero-heading">
+        <p class="home-hero-label">東京理科大学の学生を中心としたサークル</p>
+        <p class="home-hero-title" id="home-hero-title">ビジネスを学び、<br><span>仲間と試す。</span></p>
+      </div>
+      <div class="home-hero-copy">
+        <p>起業・経営・ビジネスをテーマに、輪読会や意見交換で学びを深めます。学生や社会人との交流から生まれたアイデアを、小さな企画や実践につなげることを目指しています。</p>
+        <a class="home-hero-link" href="#activity">活動を見る <span aria-hidden="true">↓</span></a>
+      </div>
+    </section>
 
     <div class="about-activity-boundary">
     <section id="about" class="about" aria-labelledby="about-title" data-figma-node="1:10">
@@ -37,7 +44,7 @@
       <img class="refine-about-mark" src="assets/refinement/connection-loop.svg" alt="" aria-hidden="true" width="280" height="280">
       <div class="about-copy">
         <h1 id="about-title"><span class="heading-line">一人の経験を、</span><span class="heading-line">次の誰かの一歩に。</span></h1>
-        <p>これから挑戦する人、すでに活動している人、経験を伝えたい人。異なる立場の人々が出会い、知識や経験を共有することで、一人では得られない学びや機会を生み出します。その学びが、また誰かの新しい挑戦につながる。そんな交流の場を目指しています。</p>
+        <p>ビジネスや経営に関心があっても、何から始めればよいか迷うことがあります。先に取り組んでいる人の試行錯誤を聞き、自分なら何ができるか考える。そんな会話が生まれ、得た経験を次の人へ渡せる場を目指しています。</p>
         <a class="text-link" href="about.html">Learn More <span class="learn-arrow" aria-hidden="true">→</span></a>
       </div>
     </section>
@@ -45,7 +52,6 @@
     <section id="activity" class="activity" aria-labelledby="activity-title" data-figma-node="1:90">
       <div class="activity-stage">
       <div class="activity-layout">
-        <div class="refine-activity-surface" aria-hidden="true"></div>
         <div class="activity-heading">
           <div class="section-label activity-label" aria-hidden="true">
             <span>Activity</span>
@@ -134,19 +140,19 @@
       <p class="connect-banner"><span>CONNECT</span></p>
       <img class="refine-connect-mark" src="assets/refinement/connection-loop.svg" alt="" aria-hidden="true" width="280" height="280">
       <h2 id="connect-title">新しい出会いを、<wbr>ここから</h2>
-      <p class="connect-subtitle">参加・交流・連携について</p>
+      <p class="connect-subtitle">参加・交流・連携について<br>受付準備中</p>
       <div class="connect-columns">
         <article class="connect-card students" data-figma-node="12:24">
           <span class="connect-index" aria-hidden="true">01 /</span>
           <h3>For Students</h3>
           <p class="body-copy">これから何かを始めたい人も、すでに活動している人も。学びや交流を通じて、仲間や新しい挑戦のきっかけを見つけませんか。</p>
-          <a class="connect-button" href="connect/?type=student" aria-label="JOIN US 学生の参加・見学について"><span>JOIN US</span><span class="connect-arrow" aria-hidden="true">↗</span></a>
+          <a class="connect-button" href="connect/?type=student"><span>参加・見学の相談</span><span class="connect-arrow" aria-hidden="true">↗</span></a>
         </article>
         <article class="connect-card partners" data-figma-node="12:36">
           <span class="connect-index" aria-hidden="true">02 /</span>
           <h3>For Partners</h3>
           <p class="body-copy">学生との交流を通じて、知識や経験を共有しませんか。異なる視点に触れ、互いに刺激を得られる関係を目指しています。</p>
-          <a class="connect-button" href="connect/?type=partner" aria-label="CONTACT 社会人・企業・団体との連携について"><span>CONTACT</span><span class="connect-arrow" aria-hidden="true">↗</span></a>
+          <a class="connect-button" href="connect/?type=partner"><span>交流・連携の相談</span><span class="connect-arrow" aria-hidden="true">↗</span></a>
         </article>
       </div>
     </section>
