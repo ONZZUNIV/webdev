@@ -79,7 +79,27 @@ ${isArchive ? '  <script src="news-filter.js" defer></script>\n' : ''}</head>
 <main id="main">
 ${main}
 </main>
-<footer class="site-footer"><nav aria-label="フッターナビゲーション"><a href="${prefix}index.html">HOME</a><a href="${prefix}about.html">About</a><a href="${prefix}activity.html">Activity</a>${newsLink}<a href="${prefix}connect/">Connect</a></nav><a href="#top">ページ上部へ <span aria-hidden="true">↑</span></a></footer>
+<footer class="site-footer">
+  <div class="footer-groups">
+    <section aria-labelledby="footer-pages">
+      <h2 class="footer-label" id="footer-pages">ページ案内</h2>
+      <nav aria-labelledby="footer-pages"><a href="${prefix}index.html">HOME</a><a href="${prefix}about.html">About</a><a href="${prefix}activity.html">Activity</a>${newsLink}<a href="${prefix}connect/">Connect</a></nav>
+    </section>
+    <section aria-labelledby="footer-media">
+      <h2 class="footer-label" id="footer-media">SNS・note</h2>
+      <ul class="footer-media-list">
+        <li class="footer-media-icon"><img src="${prefix}assets/social/instagram.svg" alt="Instagram" width="20" height="20"></li>
+        <li class="footer-media-icon"><img src="${prefix}assets/social/facebook.svg" alt="Facebook" width="20" height="20"></li>
+        <li class="footer-media-icon"><img src="${prefix}assets/social/note.svg" alt="note" width="20" height="20"></li>
+      </ul>
+      <p class="footer-media-status">公式リンクは準備中です。</p>
+    </section>
+  </div>
+  <div class="footer-meta">
+    <p>© 2026 ［団体名］</p>
+    <a href="#top">ページ上部へ <span aria-hidden="true">↑</span></a>
+  </div>
+</footer>
 </body>
 </html>
 `;
