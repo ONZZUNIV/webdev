@@ -88,7 +88,24 @@
 }
 
 /* NEWSは掲載なしの状態をそのまま案内し、仮の記事や日付は追加しない。 */
-.home-refined .news-top-rule, .home-refined .news-rule { height: 1px; opacity: .52; }
+.home-refined .news-content::before,
+.home-refined :is(.news-item,.news-empty)::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  border-top: 1px solid rgb(166 166 166 / 52%);
+  pointer-events: none;
+}
+.home-refined .news-content::before { top: -2px; }
+.home-refined :is(.news-item,.news-empty)::after { bottom: 0; }
+/* 小数倍率では色を薄めて線幅を広げ、端数位置による濃淡を抑える。 */
+@media (1dppx < resolution < 2dppx) {
+  .home-refined .news-content::before,
+  .home-refined :is(.news-item,.news-empty)::after {
+    border-top-width: 2px;
+    border-top-color: rgb(166 166 166 / 26%);
+  }
+}
 .home-refined .news-empty-title::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 12px; border: 1px solid var(--blue); border-radius: 50%; vertical-align: .15em; }
 .home-refined .news-empty > .body-copy { color: #657174; }
 

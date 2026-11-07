@@ -47,11 +47,10 @@ function titleLink(item) {
 }
 
 function homeNews(items) {
-  const rows = items.slice(0, 4).map(item => `          <li class="news-item">${badge(item.category)}<span class="news-date">${date(item.publishedOn)}</span><p>${titleLink(item)}</p><img class="news-rule" src="assets/news-rule.svg" alt="" width="1102" height="2"></li>`);
+  const rows = items.slice(0, 4).map(item => `          <li class="news-item">${badge(item.category)}<span class="news-date">${date(item.publishedOn)}</span><p>${titleLink(item)}</p></li>`);
   const content = rows.length ? `        <ul class="news-list">\n${rows.join('\n')}\n        </ul>` : `        <div class="news-empty">
           <p class="news-empty-title">現在、掲載はありません。</p>
           <p class="body-copy">お知らせや活動記録を、順次掲載していきます。</p>
-          <img class="news-rule" src="assets/news-rule.svg" alt="" width="1102" height="2">
         </div>`;
   return `${start}\n${content}\n        <a class="text-link news-more" href="news.html" aria-label="NEWS一覧を見る">View More <span aria-hidden="true">→</span></a>\n${end}`;
 }
