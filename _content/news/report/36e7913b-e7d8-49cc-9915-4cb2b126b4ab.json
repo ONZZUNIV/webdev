@@ -1,0 +1,18 @@
+{
+  "id": "36e7913b-e7d8-49cc-9915-4cb2b126b4ab",
+  "title": "test",
+  "summary": "test",
+  "status": "published",
+  "publishedOn": "2026-11-07",
+  "report": {
+    "heldOn": "2026-11-21",
+    "body": "test",
+    "notes": "test",
+    "photos": [
+      {
+        "src": "assets/news/mw67oyqs-56vao842.png",
+        "alt": "test"
+      }
+    ]
+  }
+}
