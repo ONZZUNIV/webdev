@@ -1,0 +1,14 @@
+{
+  "id": "612657a9-bf94-4666-9b66-8b5acbdd6409",
+  "title": "test",
+  "summary": "test",
+  "status": "published",
+  "publishedOn": "2026-11-07",
+  "event": {
+    "startsAt": "2026-11-21T20:38Z",
+    "location": "test",
+    "description": "test",
+    "status": "scheduled",
+    "registrationStatus": "not-open"
+  }
+}
