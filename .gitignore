@@ -5,6 +5,7 @@ node_modules/
 .DS_Store
 
 evidence/
+/_drafts/
 
 # Local development and design references
 /README.md

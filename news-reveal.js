@@ -1,8 +1,8 @@
-// Newsラベルの後に掲載なしの案内をフェード表示する。位置は動かさない。
+// Newsラベルの後に一覧または掲載なしの案内をフェード表示する。位置は動かさない。
 (() => {
   const label = document.querySelector('.news-label');
   const text = label?.querySelector('span'), rule = label?.querySelector('img');
-  const copy = label?.closest('.news')?.querySelector('.news-empty > .body-copy');
+  const copy = label?.closest('.news')?.querySelector('.news-empty > .body-copy, .news-list');
   if (!text || !rule || !('IntersectionObserver' in window) ||
       typeof window.matchMedia !== 'function') return;
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
