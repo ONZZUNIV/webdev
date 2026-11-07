@@ -55,7 +55,8 @@ function homeNews(items) {
   return `${start}\n${content}\n        <a class="text-link news-more" href="news.html" aria-label="NEWS一覧を見る">View More <span aria-hidden="true">→</span></a>\n${end}`;
 }
 
-function page({ title, description, main, prefix = '', filter = false }) {
+function page({ title, description, main, prefix = '', isArchive = false }) {
+  const newsLink = `<a href="${prefix}news.html"${isArchive ? ' aria-current="page"' : ''}>News</a>`;
   return `<!doctype html>
 ${generated}
 <html lang="ja">
@@ -68,17 +69,17 @@ ${generated}
   <link rel="stylesheet" href="${prefix}details.css">
   <link rel="stylesheet" href="${prefix}site.css">
   <link rel="stylesheet" href="${prefix}news.css">
-${filter ? '  <script src="news-filter.js" defer></script>\n' : ''}</head>
+${isArchive ? '  <script src="news-filter.js" defer></script>\n' : ''}</head>
 <body class="detail-page news-page" id="top">
 <a class="site-skip" href="#main">本文へ移動</a>
 <header class="site-header">
   <a class="site-home" href="${prefix}index.html">HOME</a>
-  <nav class="site-nav" aria-label="メインナビゲーション"><a href="${prefix}about.html">About</a><a href="${prefix}activity.html">Activity</a><a href="${prefix}connect/">Connect</a></nav>
+  <nav class="site-nav" aria-label="メインナビゲーション"><a href="${prefix}about.html">About</a><a href="${prefix}activity.html">Activity</a>${newsLink}<a href="${prefix}connect/">Connect</a></nav>
 </header>
 <main id="main">
 ${main}
 </main>
-<footer class="site-footer"><nav aria-label="フッターナビゲーション"><a href="${prefix}index.html">HOME</a><a href="${prefix}about.html">About</a><a href="${prefix}activity.html">Activity</a><a href="${prefix}connect/">Connect</a></nav><a href="#top">ページ上部へ <span aria-hidden="true">↑</span></a></footer>
+<footer class="site-footer"><nav aria-label="フッターナビゲーション"><a href="${prefix}index.html">HOME</a><a href="${prefix}about.html">About</a><a href="${prefix}activity.html">Activity</a>${newsLink}<a href="${prefix}connect/">Connect</a></nav><a href="#top">ページ上部へ <span aria-hidden="true">↑</span></a></footer>
 </body>
 </html>
 `;
@@ -91,7 +92,7 @@ function archive(items) {
       <div class="news-entry-meta">${badge(item.category)}<span class="news-publication">公開日 ${date(item.publishedOn)}</span>${item.category === 'blog' && item.blog.notePublishedOn !== item.publishedOn ? `<span class="news-publication">note公開日 ${date(item.blog.notePublishedOn)}</span>` : ''}</div>
       <div class="news-entry-copy"><h2>${titleLink(item)}</h2><p>${html(item.summary)}</p></div>${item.thumbnail ? `\n      <div class="news-entry-image">${photo(item.thumbnail)}</div>` : ''}
     </li>`);
-  return page({ title: 'News', description, filter: true, main: `<section class="news-hero" aria-labelledby="news-title">
+  return page({ title: 'News', description, isArchive: true, main: `<section class="news-hero" aria-labelledby="news-title">
   <p class="detail-eyebrow">NEWS / UPDATES</p>
   <h1 id="news-title">News</h1>
   <p>${description}</p>
