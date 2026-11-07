@@ -35,7 +35,7 @@ function url(value, field, noteOnly = false) {
 
 async function image(root, value, field) {
   if (!object(value)) throw new Error(`${field} は画像の情報を指定してください。`);
-  if (typeof value.src !== 'string' || !/^assets\/news\/[a-zA-Z0-9][a-zA-Z0-9_-]*\.(avif|gif|jpe?g|png|webp)$/i.test(value.src)) {
+  if (typeof value.src !== 'string' || !/^assets\/news\/(?:[a-z0-9][a-z0-9_-]*\/)*[a-z0-9][a-z0-9_-]*\.(avif|gif|jpe?g|png|webp)$/i.test(value.src)) {
     throw new Error(`${field}.src は assets/news/ 内の画像パスを指定してください。`);
   }
   if (typeof value.alt !== 'string') throw new Error(`${field}.alt を指定してください。`);
@@ -108,7 +108,11 @@ export async function readPublishedNews(root, today) {
       const relative = `_content/news/${category}/${file.name}`;
       try {
         const item = JSON.parse((await readFile(join(directory, file.name), 'utf8')).replace(/^\uFEFF/, ''));
-        if (!object(item) || item.category !== category) throw new Error('category はフォルダー名と一致させてください。');
+        if (!object(item)) throw new Error('原稿はJSONオブジェクトで指定してください。');
+        // CMSで作成した原稿はフォルダー名と固定のファイル名から分類・slugを決める。
+        if (item.category === undefined) item.category = category;
+        if (item.slug === undefined) item.slug = file.name.slice(0, -'.json'.length);
+        if (item.category !== category) throw new Error('category はフォルダー名と一致させてください。');
         if (typeof item.slug !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.slug) || file.name !== `${item.slug}.json`) {
           throw new Error('slug は半角英小文字・数字・ハイフンで指定し、ファイル名と一致させてください。');
         }

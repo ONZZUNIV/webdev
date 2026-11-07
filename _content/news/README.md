@@ -1,33 +1,41 @@
 # NEWSの原稿と公開手順
 
-1記事を `_content/news/event/`、`_content/news/report/`、`_content/news/blog/` のいずれかに `slug.json` として保存します。`slug` は半角英小文字・数字・ハイフンで構成し、全カテゴリーで一意にします。公開後も同じslugを使うと、詳細ページのURLを維持できます。
+## 初回設定（リポジトリ管理者）
 
-原稿はUTF-8のJSONです。公開可能な画像を使う場合は `assets/news/` に置き、原稿にファイルのパスと代替テキストを指定します。画像のファイル名は半角英数字・ハイフン・アンダースコアを使用します。未公開の個人情報、申込者情報、APIキーや非公開の写真は原稿やGitに保存しません。公開リポジトリでは `draft` の原稿もGit上で閲覧できるため、非公開の作業原稿はGitの管理対象外である `_drafts/` などに置きます。
+1. [Pages CMS](https://app.pagescms.org/) にGitHubでログインします。GitHub Appのインストール先に `ONZZUNIV`、アクセス先に `ONZZUNIV/webdev` のみを選びます。組織の設定によってはオーナーの承認が必要です。
+2. Pages CMSで `ONZZUNIV/webdev` の `main` を開きます。リポジトリの `.pages.yml` から、EVENT・REPORT・BLOGと画像管理が表示されます。編集者にはGitHubでリポジトリへの書き込み権限を付与するか、Pages CMSのCollaboratorsで編集者として招待します。
+3. [GitHub Pagesの設定](https://github.com/ONZZUNIV/webdev/settings/pages) で公開元を **GitHub Actions** に設定します。[Actions](https://github.com/ONZZUNIV/webdev/actions/workflows/pages.yml) の「NEWSを生成してGitHub Pagesへ公開」を `main` で実行し、公開URLで確認します。
 
-## 公開
+## 記事の登録・編集（運営メンバー）
 
-1. `status` を `published` にし、公開日と必要な項目を確認します。
-2. リポジトリのルートで `node _scripts/build-news.mjs` を実行します。Node.jsの標準機能だけを使います。
-3. `index.html` のNEWS欄、`news.html`、サイト内詳細の `news/<slug>.html` を確認します。`node _scripts/build-news.mjs --check` で、生成結果が現在の原稿と一致するか確認できます。
-4. 原稿・画像・生成されたファイルをまとめてコミットします。公開を取り下げるときも、`draft` に戻して再生成し、古い詳細ファイルの削除を含めて反映します。
+1. Pages CMSでリポジトリの `main` を開き、EVENT・REPORT・BLOGから該当する種類を選んで新規作成します。タイトル、概要、NEWS公開日と種類ごとの必須欄を入力します。EVENTの開催日時は端末のタイムゾーンで入力し、公開サイトでは日本時間に統一します。
+2. サムネイルを付ける場合は画像を選び、代替テキストを入力します。REPORTでは「活動写真」に行を追加して、画像を1枚ずつ選択またはアップロードします。本文欄では見出し・段落・リンク・箇条書きを編集できます。
+3. 確認中は「下書き」、掲載するときは「公開」にして保存します。編集は一覧から対象記事を開いて保存します。取り下げるときは「下書き」に戻して保存します。修正した記事を新着にしない場合、NEWS公開日はそのままにして更新日を入力します。
+4. [Actions](https://github.com/ONZZUNIV/webdev/actions/workflows/pages.yml) が成功したら、[HOME](https://onzzuniv.github.io/webdev/) と [NEWS一覧](https://onzzuniv.github.io/webdev/news.html) を確認します。失敗時はActionsの「NEWSを生成」ログで原稿のファイル名・項目を確認し、修正して再保存します。
 
-生成時点で、日本時間の今日以前の `publishedOn` を持つ `published` の記事だけを公開します。未来の日付の記事は、公開日以降に再生成したときに掲載されます。現在の更新方式は手動生成です。HOMEには先頭4件、一覧には全件を出します。公開日の降順で、同日の記事はslug順です。更新日、開催日、実施日、noteでの公開日は新着順に影響しません。
+公開リポジトリのため、下書き原稿とアップロード済みの画像はGitHub上で閲覧できます。未公開の個人情報、申込者情報、APIキーや非公開の写真は保存せず、非公開の作業原稿はGitの管理対象外である `_drafts/` などに置きます。活動写真はアップロード前に公開可否を確認し、位置情報などのメタデータを除去してください。表示に必要な解像度に縮小し、JPEGやWebPで1枚あたり1MB程度を目安にすると、閲覧時の転送量とリポジトリ容量を抑えられます。CMSの記事から画像の行を削除しても、画像ファイル自体は残るため、メディア管理から削除する前に他の記事での使用を確認してください。
 
-一覧と詳細は生成済みHTMLを配信します。ブラウザーが原稿フォルダーを読み込む処理はありません。絞り込みだけをJavaScriptで行うため、JavaScriptを無効にしても記事一覧と詳細は読めます。リンク・画像・CSSは相対パスです。GitHub Pagesの標準Jekyll配信では、`_content/` と `_scripts/` は公開対象外です。[GitHub PagesとJekyllの公開対象](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/about-github-pages-and-jekyll)
+## データ形式と生成処理
+
+原稿はUTF-8のJSONで、カテゴリー別の `_content/news/event/`、`_content/news/report/`、`_content/news/blog/` に1記事1ファイルで保存します。CMSは新規作成時にUUIDを発行してファイル名に使い、編集時はファイル名を固定します。生成時にフォルダー名を分類、拡張子を除いたファイル名をslugとして使います。従来の `slug` と `category` を明記した原稿も読み込めます。
+
+GitHub Actionsが `main` への保存時に原稿を読み込み、HOMEのNEWS欄、`news.html`、サイト内の詳細ページを生成します。日本時間で公開日を迎えた「公開」の原稿だけを掲載します。未来日で設定した記事は、公開日以降の定期実行（日本時間0:19を目安）または手動実行で反映されます。HOMEは最新4件、一覧は全件です。公開日の降順で、同日はslug順になります。
+
+公開成果物にはHTML・CSS・JavaScript・公開素材を含め、原稿とCMS設定は除外します。記事と画像は相対パスで参照するため、`/webdev/` 配下で動作します。ローカルではNode.js 24とnpmで `npm ci --ignore-scripts`、`npm run build:news` の順に実行します。`npm run check:news` で生成結果を確認できます。公開用HTMLの生成はActionsで行うため、記事編集時に生成済みファイルをコミットする作業は不要です。
 
 ## 共通項目
 
 | 項目 | 内容 |
 | --- | --- |
-| `slug` | ファイル名と一致する一意の識別子 |
-| `category` | `event`、`report`、`blog`。フォルダー名と一致させる |
+| `slug` | ファイル名から決まる一意の識別子。原稿に指定する場合はファイル名と一致させる |
+| `category` | フォルダー名から決まる分類。原稿に指定する場合はフォルダー名と一致させる |
 | `status` | `draft` または `published` |
 | `title`、`summary` | タイトルと一覧で表示する概要。BLOGでは概要が記事の紹介文になる |
 | `publishedOn` | NEWSとしての公開日。`YYYY-MM-DD` |
 | `updatedOn` | 任意の更新日。`YYYY-MM-DD`。公開日以降の日付を指定 |
 | `thumbnail` | 任意の画像情報。`{ "src": "assets/news/cover.jpg", "alt": "画像の説明" }` |
 
-最小の下書きには `slug`、`category`、`status` を入れます。`published` にすると、共通の必須項目とカテゴリー固有の項目を検証します。本文はプレーンテキストで保存し、改行を `\n`、段落区切りを `\n\n` で記述します。本文やタイトルにHTMLを入れても、タグは文字として表示されます。
+`published` の原稿は、共通の必須項目とカテゴリー固有の項目を生成前に検証します。REPORTの本文のみMarkdownに対応します。HTMLタグは文字として表示します。
 
 ## カテゴリー固有の項目
 
@@ -51,8 +59,6 @@
 - `url` に `https://note.com/` の記事URL、`notePublishedOn` にnote側の公開日を指定します。紹介文は共通の `summary`、画像は `thumbnail` を使います。
 - 外部取得へ移すときに使うIDは、任意の `sourceId` に保持できます。初期の手動登録ではURLで同じ記事か確認します。取得を自動化した後も、外部IDまたは記事URLで既存の記事を更新し、サイト側の `slug` と `publishedOn` を引き継ぎます。
 
-## 管理する場所とCMSへの移行
+## EVENTの管理元
 
 現時点では、運営メンバーが原稿のEVENT開催情報を管理します。外部のイベント管理を導入したら、外部IDに対応する開催日時・場所・受付状況の管理元をそのシステムに切り替えます。取り込み処理で原稿と同じデータ形式へ変換し、CMSで同じ開催情報を手入力する運用を終えます。NEWSのタイトル・紹介文・公開日・公開状態は引き続き編集側で管理します。
-
-Pages CMS導入時は、リポジトリを接続し、ルートの `.pages.yml` にカテゴリー別のJSONコレクション、共通項目、各カテゴリーのオブジェクト項目を設定します。画像の保存先は `assets/news/` に合わせます。公開済み記事のslugは編集画面でも変更できない扱いにします。CMS保存後に `node _scripts/build-news.mjs` が実行されるよう、公開ワークフローへ生成コマンドを追加します。配信用の成果物に含めるのは、生成済みHTML、表示用CSS・JS、公開素材です。原稿と生成スクリプトは配信用の成果物から除外します。[Pages CMSのコレクション設定](https://pagescms.org/docs/configuration/content/)

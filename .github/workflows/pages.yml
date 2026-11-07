@@ -1,0 +1,54 @@
+name: NEWSを生成してGitHub Pagesへ公開
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # 未来日で保存した記事を日本時間の公開日から掲載する。
+    - cron: '19 15 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: NEWSを生成
+        run: |
+          npm ci --ignore-scripts
+          npm run build:news
+      - name: 公開ファイルをまとめる
+        run: |
+          mkdir _site
+          git ls-files -z -- ':(top,glob)*.html' ':(top,glob)*.css' ':(top,glob)*.js' 'assets/' 'connect/' ':!:assets/news/.gitkeep' |
+            xargs -0 cp --parents --target-directory=_site --
+          if [ -d news ]; then cp -r news _site/; fi
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v5
+        id: deployment

@@ -48,6 +48,12 @@
 .news-article-section { margin-top: clamp(36px,5vw,64px); }
 .news-article-section h2 { font-size: clamp(22px,2.4vw,34px); font-weight: 600; margin-bottom: 20px; }
 .news-article-section p + p { margin-top: 18px; }
+.news-report-body { overflow-wrap: anywhere; }
+.news-report-body > * + * { margin-top: 18px; }
+.news-report-body :is(h3,h4,h5,h6) { font-size: 1.15em; font-weight: 600; }
+.news-report-body :is(ul,ol) { padding-inline-start: 1.5em; }
+.news-report-body a { color: var(--blue); text-decoration: underline; text-underline-offset: .24em; }
+.news-report-body pre { overflow-x: auto; }
 .news-article-cover { margin: 32px 0 0; }
 .news-photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,240px),1fr)); gap: 24px; }
 .news-photos figure { margin: 0; }

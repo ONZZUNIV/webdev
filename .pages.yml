@@ -1,0 +1,197 @@
+media:
+  input: assets/news
+  output: assets/news
+  extensions: [avif, gif, jpg, jpeg, png, webp]
+  rename: random
+
+settings:
+  commit:
+    templates:
+      create: "NEWSの原稿または画像を追加（{filename}）"
+      update: "NEWSの原稿または画像を更新（{filename}）"
+      delete: "NEWSの原稿または画像を削除（{filename}）"
+      rename: "NEWSのファイル名を変更（{oldFilename} → {newFilename}）"
+
+components:
+  image:
+    type: object
+    fields:
+      - {name: src, label: 画像, type: image, required: true}
+      - name: alt
+        label: 代替テキスト
+        type: string
+        required: true
+        description: 写真に写っている内容を短く説明してください。
+      - {name: caption, label: キャプション, type: string}
+
+content:
+  - name: event
+    label: EVENT｜イベント
+    type: collection
+    path: _content/news/event
+    format: json
+    subfolders: false
+    filename: &filename "{id}.json"
+    operations: &operations {rename: false}
+    view: &view
+      primary: title
+      fields: [title, status, publishedOn]
+      default: {sort: publishedOn, order: desc}
+    fields:
+      - &id
+        name: id
+        label: 記事ID
+        type: uuid
+        hidden: true
+        options: {editable: false, generate: false}
+      # 従来の原稿に明記された識別子・分類があれば、編集後も保持する。
+      - &legacySlug {name: slug, type: string, hidden: true}
+      - &legacyCategory {name: category, type: string, hidden: true}
+      - &title {name: title, label: タイトル, type: string, required: true}
+      - &summary {name: summary, label: 一覧用の概要, type: text, required: true}
+      - &status
+        name: status
+        label: 公開状態
+        type: select
+        required: true
+        default: draft
+        description: 下書きも公開リポジトリに保存されます。未公開の個人情報や内部資料は入力しないでください。
+        options:
+          values:
+            - {name: draft, label: 下書き}
+            - {name: published, label: 公開}
+      - &published
+        name: publishedOn
+        label: NEWS公開日
+        type: date
+        required: true
+        description: サイトでの掲載日と新着順に使用します。
+      - &updated
+        name: updatedOn
+        label: 更新日
+        type: date
+        default: ""
+        description: 必要なときだけ記入してください。新着順には影響しません。
+      - &thumbnail {name: thumbnail, label: サムネイル, component: image}
+      - name: event
+        label: 開催情報
+        type: object
+        required: true
+        fields:
+          - name: startsAt
+            label: 開催開始日時
+            type: date
+            required: true
+            default: ""
+            description: 日本時間で入力する場合は端末のタイムゾーンを日本時間に設定してください。
+            options: &datetime {time: true, format: "yyyy-MM-dd'T'HH:mmXXX"}
+          - {name: endsAt, label: 開催終了日時, type: date, default: "", options: *datetime}
+          - {name: location, label: 開催場所, type: string, required: true}
+          - {name: description, label: イベント説明・参加方法, type: text, required: true}
+          - name: status
+            label: 開催状況
+            type: select
+            required: true
+            default: scheduled
+            options:
+              values:
+                - {name: scheduled, label: 開催予定}
+                - {name: postponed, label: 延期}
+                - {name: cancelled, label: 中止}
+                - {name: completed, label: 開催終了}
+          - name: registrationStatus
+            label: 受付状況
+            type: select
+            required: true
+            default: not-open
+            options:
+              values:
+                - {name: not-open, label: 受付開始前}
+                - {name: open, label: 受付中}
+                - {name: closed, label: 受付終了}
+                - {name: not-required, label: 申込不要}
+          - {name: registrationUrl, label: 参加申込URL, type: string, pattern: &https '^https://[^\s]+$'}
+          - name: detailUrl
+            label: 外部イベント案内URL
+            type: string
+            pattern: *https
+            description: 入力するとNEWSから外部案内へ直接移動します。空欄の場合はサイト内の詳細を表示します。
+          - name: source
+            label: 外部システムとの紐付け
+            type: object
+            hidden: true
+            fields:
+              - {name: system, type: string}
+              - {name: eventId, type: string}
+
+  - name: report
+    label: REPORT｜活動記録
+    type: collection
+    path: _content/news/report
+    format: json
+    subfolders: false
+    filename: *filename
+    operations: *operations
+    view: *view
+    fields:
+      - *id
+      - *legacySlug
+      - *legacyCategory
+      - *title
+      - *summary
+      - *status
+      - *published
+      - *updated
+      - *thumbnail
+      - name: report
+        label: 活動記録
+        type: object
+        required: true
+        fields:
+          - {name: heldOn, label: 活動実施日, type: date, required: true, default: ""}
+          - name: body
+            label: 本文
+            type: rich-text
+            required: true
+            options: {format: markdown, media: false}
+          - {name: notes, label: 活動メモ, type: text}
+          - name: photos
+            label: 活動写真
+            component: image
+            list: true
+            description: 公開できる写真を選び、1枚ずつ代替テキストを記入してください。
+          - name: links
+            label: 関連リンク
+            type: object
+            list: true
+            fields:
+              - {name: label, label: リンク名, type: string, required: true}
+              - {name: url, label: URL, type: string, required: true, pattern: *https}
+
+  - name: blog
+    label: BLOG｜note記事
+    type: collection
+    path: _content/news/blog
+    format: json
+    subfolders: false
+    filename: *filename
+    operations: *operations
+    view: *view
+    fields:
+      - *id
+      - *legacySlug
+      - *legacyCategory
+      - *title
+      - *summary
+      - *status
+      - *published
+      - *updated
+      - *thumbnail
+      - name: blog
+        label: noteの記事情報
+        type: object
+        required: true
+        fields:
+          - {name: url, label: note記事URL, type: string, required: true, pattern: '^https://note\.com/[^\s]+$'}
+          - {name: notePublishedOn, label: noteでの公開日, type: date, required: true, default: ""}
+          - {name: sourceId, type: string, hidden: true}

@@ -1,6 +1,7 @@
 import { mkdir, readFile, readdir, unlink, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import MarkdownIt from 'markdown-it';
 import { categories, eventStatuses, registrationStatuses, readPublishedNews } from './news-data.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -13,6 +14,16 @@ const html = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&a
 const date = value => `<time datetime="${html(value)}">${html(value.replaceAll('-', '.'))}</time>`;
 const dateTime = value => `<time datetime="${html(value)}">${dateFormat.format(new Date(value))}</time>`;
 const badge = category => `<span class="news-category news-category--${category}">${category.toUpperCase()}</span>`;
+
+// 活動写真は代替テキスト付きの写真欄で管理する。本文の見出しは「活動内容」の下に置く。
+const reportMarkdown = new MarkdownIt({ html: false, breaks: true }).disable('image');
+reportMarkdown.core.ruler.push('report_headings', ({ tokens }) => {
+  for (const token of tokens) {
+    if (token.type === 'heading_open' || token.type === 'heading_close') {
+      token.tag = `h${Math.min(6, Number(token.tag[1]) + 2)}`;
+    }
+  }
+});
 
 function paragraphs(value) {
   return value.trim().split(/\r?\n\s*\r?\n/).map(part => `<p>${html(part).replace(/\r?\n/g, '<br>')}</p>`).join('\n');
@@ -103,7 +114,7 @@ function reportBody(report) {
   const photos = (report.photos ?? []).map(image => `      <figure>${photo(image, '../')}${image.caption ? `<figcaption>${html(image.caption)}</figcaption>` : ''}</figure>`);
   const links = (report.links ?? []).map(link => `<li><a href="${html(link.url)}">${html(link.label)} <span class="news-destination">外部サイト ↗</span></a></li>`);
   return `<dl class="detail-facts news-article-facts"><div><dt>活動実施日</dt><dd>${date(report.heldOn)}</dd></div></dl>
-    <section class="news-article-section"><h2>活動内容</h2>${paragraphs(report.body)}</section>${report.notes ? `
+    <section class="news-article-section"><h2>活動内容</h2><div class="news-report-body">${reportMarkdown.render(report.body)}</div></section>${report.notes ? `
     <section class="news-article-section"><h2>活動メモ</h2>${paragraphs(report.notes)}</section>` : ''}${photos.length ? `
     <section class="news-article-section"><h2>活動写真</h2><div class="news-photos">\n${photos.join('\n')}\n    </div></section>` : ''}${links.length ? `
     <section class="news-article-section"><h2>関連リンク</h2><ul class="news-related">${links.join('')}</ul></section>` : ''}`;

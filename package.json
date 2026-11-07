@@ -1,0 +1,11 @@
+{
+  "name": "onzzuniv-webdev",
+  "private": true,
+  "scripts": {
+    "build:news": "node _scripts/build-news.mjs",
+    "check:news": "node _scripts/build-news.mjs --check"
+  },
+  "devDependencies": {
+    "markdown-it": "15.0.3"
+  }
+}
