@@ -3,6 +3,7 @@
   const elements = [...document.querySelectorAll('[data-detail-reveal]')];
   if (!elements.length || !('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   let observer;
+  let observing = false;
   const pending = new Set(elements);
   const covers = new Map();
 
@@ -14,7 +15,7 @@
   }
 
   function coverHeading(heading) {
-    if (!heading.matches('.detail-section-heading h2, .detail-activity-name h2')) return;
+    if (!heading.matches('h2, h3')) return;
     if (document.fonts?.status === 'loading') return;
     // 折り返し後の文字の範囲を測り、行ごとに帯を重ねる。
     const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
@@ -68,6 +69,7 @@
     observer?.unobserve(element);
   }
   function checkPassed() {
+    if (!observing) return;
     for (const element of pending) {
       // 高速スクロールや途中表示でも、通過済みの内容を隠したままにしない。
       if (element.getBoundingClientRect().bottom <= 0) {
@@ -81,7 +83,7 @@
     observer = new IntersectionObserver(entries => {
       entries.forEach(entry => { if (entry.isIntersecting) show(entry.target); });
     }, { rootMargin: '0px 0px -15% 0px', threshold: 0 });
-    elements.forEach(element => { element.dataset.detailState = 'pending'; observer.observe(element); });
+    elements.forEach(element => { element.dataset.detailState = 'pending'; });
     window.addEventListener('scroll', checkPassed, { passive: true });
     window.addEventListener('pageshow', checkPassed);
     let layoutWidth = innerWidth;
@@ -99,7 +101,23 @@
         pending.clear(); observer.disconnect();
       }
     });
-    checkPassed();
+    // フォント読込とスクロール位置の復元後に、折り返しと開始位置を判定する。
+    function observePending() {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (observing) return;
+          observing = true;
+          checkPassed();
+          pending.forEach(element => observer.observe(element));
+        });
+      });
+    }
+    const fontDeadline = setTimeout(observePending, 1600);
+    const pageShown = document.readyState === 'complete' ? Promise.resolve() : new Promise(resolve => {
+      window.addEventListener('pageshow', resolve, { once: true });
+    });
+    function ready() { clearTimeout(fontDeadline); observePending(); }
+    Promise.all([pageShown, document.fonts?.ready]).then(ready, ready);
   } catch {
     elements.forEach(element => element.removeAttribute('data-detail-state'));
     observer?.disconnect();
