@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Connect | サークルサイト</title>
+  <meta name="description" content="学生の参加・見学、社会人や企業・団体との交流・連携、その他のご相談窓口です。">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../details.css">
+  <link rel="stylesheet" href="../site.css">
+  <link rel="stylesheet" href="form.css">
+  <script src="form.js" defer></script>
+</head>
+<body class="detail-page contact-page" id="top">
+<a class="site-skip" href="#main">本文へ移動</a>
+<header class="site-header">
+  <a class="site-home" href="../index.html">HOME</a>
+  <nav class="site-nav" aria-label="メインナビゲーション"><a href="../about.html">About</a><a href="../activity.html">Activity</a><a href="./" aria-current="page">Connect</a></nav>
+</header>
+<main id="main">
+  <section class="contact-hero" aria-labelledby="page-title">
+    <div class="contact-hero-title"><p class="detail-eyebrow">CONNECT / CONTACT</p><h1 id="page-title">Connect</h1></div>
+    <div class="contact-hero-copy">
+      <h2>新しい出会いを、<br><span>ここから。</span></h2>
+      <p>活動を見てみたい学生の方も、経験を共有したい社会人の方も。参加・見学、企業や団体との交流・連携など、ご相談の内容に合った窓口をお選びください。</p>
+    </div>
+  </section>
+  <section class="contact-layout" aria-labelledby="contact-title">
+    <div class="contact-intro">
+      <p class="detail-eyebrow">GET IN TOUCH</p>
+      <h2 id="contact-title">お問い合わせ</h2>
+      <p>活動について知りたいことや、一緒に取り組んでみたいことをお聞かせください。</p>
+      <div class="contact-mail">
+        <h3>メールでのご連絡</h3>
+        <!-- 公式アドレス確定後に、準備中の案内をメールリンクへ差し替える。 -->
+        <p>社会人・企業・団体の方に向けた公式メール窓口は準備中です。</p>
+      </div>
+    </div>
+    <div class="contact-form-area">
+      <div class="contact-notice" id="contact-notice">
+        <p><strong>お問い合わせの受付は準備中です。</strong></p>
+        <p>現在は入力内容の確認までお試しいただけます。入力した内容は送信されません。</p>
+      </div>
+      <noscript><p class="contact-no-script">入力欄の切り替えと入力確認にはJavaScriptが必要です。</p></noscript>
+      <!-- 送信先を接続するまでは、ブラウザーの標準送信でも通信が発生しない方式にする。 -->
+      <form id="contact-form" method="dialog" aria-describedby="contact-notice" novalidate>
+        <fieldset class="contact-form-fields" disabled>
+          <fieldset class="contact-type" aria-describedby="contact-type-hint contact-type-error">
+            <legend>お問い合わせの種類 <span class="contact-required">必須</span></legend>
+            <div class="contact-options">
+              <label class="contact-option"><input type="radio" name="category" value="student" aria-describedby="contact-type-error" required><span>学生・参加希望の方</span></label>
+              <label class="contact-option"><input type="radio" name="category" value="partner" aria-describedby="contact-type-error" required><span>社会人・企業・団体の方</span></label>
+              <label class="contact-option"><input type="radio" name="category" value="other" aria-describedby="contact-type-error" required><span>その他のお問い合わせ</span></label>
+            </div>
+            <p class="contact-error" id="contact-type-error"></p>
+            <p class="contact-hint" id="contact-type-hint" aria-live="polite">種類を選ぶと、ご相談に合った項目が表示されます。</p>
+          </fieldset>
+          <div class="contact-fields">
+            <div class="contact-field">
+              <label for="contact-name">お名前 <span class="contact-required">必須</span></label>
+              <input id="contact-name" name="name" type="text" autocomplete="name" maxlength="100" required aria-describedby="contact-name-error">
+              <p class="contact-error" id="contact-name-error"></p>
+            </div>
+            <div class="contact-field">
+              <label for="contact-email">メールアドレス <span class="contact-required">必須</span></label>
+              <input id="contact-email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="contact-email-error">
+              <p class="contact-error" id="contact-email-error"></p>
+            </div>
+          </div>
+          <fieldset class="contact-fields contact-extra" data-contact-category="student" aria-label="学生の方のご相談" hidden disabled>
+            <div class="contact-field">
+              <label for="contact-school">学校名・所属 <span class="contact-optional">任意</span></label>
+              <input id="contact-school" name="school" type="text" autocomplete="organization" maxlength="150" aria-describedby="contact-school-error">
+              <p class="contact-error" id="contact-school-error"></p>
+            </div>
+            <div class="contact-field">
+              <label for="contact-student-topic">相談内容の分類 <span class="contact-optional">任意</span></label>
+              <select id="contact-student-topic" name="topic">
+                <option value="">選択してください</option>
+                <option value="visit">活動への参加・見学</option>
+                <option value="membership">入会についての相談</option>
+                <option value="activities">活動内容についての質問</option>
+                <option value="other">その他</option>
+              </select>
+            </div>
+          </fieldset>
+          <fieldset class="contact-fields contact-extra" data-contact-category="partner" aria-label="社会人・企業・団体の方のご相談" hidden disabled>
+            <div class="contact-field">
+              <label for="contact-organization">所属・団体名 <span class="contact-optional">任意</span></label>
+              <input id="contact-organization" name="organization" type="text" autocomplete="organization" maxlength="150" aria-describedby="contact-organization-error">
+              <p class="contact-error" id="contact-organization-error"></p>
+            </div>
+            <div class="contact-field">
+              <label for="contact-partner-topic">相談内容の分類 <span class="contact-optional">任意</span></label>
+              <select id="contact-partner-topic" name="topic">
+                <option value="">選択してください</option>
+                <option value="talk">登壇・講演</option>
+                <option value="exchange">学生との交流</option>
+                <option value="project">イベント・共同企画</option>
+                <option value="other">その他の連携・相談</option>
+              </select>
+            </div>
+          </fieldset>
+          <div class="contact-field contact-message">
+            <label for="contact-message">メッセージ <span class="contact-required">必須</span></label>
+            <textarea id="contact-message" name="message" rows="6" maxlength="3000" required aria-describedby="contact-message-hint contact-message-error"></textarea>
+            <p class="contact-hint" id="contact-message-hint">相談したいことをお書きください。</p>
+            <p class="contact-error" id="contact-message-error"></p>
+          </div>
+          <div class="contact-actions">
+            <button class="contact-check" type="submit">入力内容を確認する <span aria-hidden="true">→</span></button>
+            <p class="contact-hint">このボタンで送信されることはありません。</p>
+          </div>
+        </fieldset>
+        <p id="contact-result" class="contact-result" role="status"></p>
+      </form>
+    </div>
+  </section>
+</main>
+<footer class="site-footer"><nav aria-label="フッターナビゲーション"><a href="../index.html">HOME</a><a href="../about.html">About</a><a href="../activity.html">Activity</a><a href="./" aria-current="page">Connect</a></nav><a href="#top">ページ上部へ <span aria-hidden="true">↑</span></a></footer>
+</body>
+</html>

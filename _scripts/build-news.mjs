@@ -62,12 +62,12 @@ ${filter ? '  <script src="news-filter.js" defer></script>\n' : ''}</head>
 <a class="site-skip" href="#main">本文へ移動</a>
 <header class="site-header">
   <a class="site-home" href="${prefix}index.html">HOME</a>
-  <nav class="site-nav" aria-label="メインナビゲーション"><a href="${prefix}about.html">About</a><a href="${prefix}activity.html">Activity</a><a href="${prefix}index.html#connect">Connect</a></nav>
+  <nav class="site-nav" aria-label="メインナビゲーション"><a href="${prefix}about.html">About</a><a href="${prefix}activity.html">Activity</a><a href="${prefix}connect/">Connect</a></nav>
 </header>
 <main id="main">
 ${main}
 </main>
-<footer class="site-footer"><nav aria-label="フッターナビゲーション"><a href="${prefix}index.html">HOME</a><a href="${prefix}about.html">About</a><a href="${prefix}activity.html">Activity</a><a href="${prefix}index.html#connect">Connect</a></nav><a href="#top">ページ上部へ <span aria-hidden="true">↑</span></a></footer>
+<footer class="site-footer"><nav aria-label="フッターナビゲーション"><a href="${prefix}index.html">HOME</a><a href="${prefix}about.html">About</a><a href="${prefix}activity.html">Activity</a><a href="${prefix}connect/">Connect</a></nav><a href="#top">ページ上部へ <span aria-hidden="true">↑</span></a></footer>
 </body>
 </html>
 `;
