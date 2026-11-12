@@ -1,0 +1,15 @@
+{
+  "id": "8342b6ed-b073-4b91-b256-b8ffd8932c05",
+  "title": "イベントテスト",
+  "summary": "権限",
+  "status": "published",
+  "publishedOn": "2026-11-12",
+  "event": {
+    "startsAt": "2026-11-13T21:42Z",
+    "endsAt": "2026-11-28T18:48Z",
+    "location": "aa",
+    "description": "テスト用",
+    "status": "scheduled",
+    "registrationStatus": "not-open"
+  }
+}
